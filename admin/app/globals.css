@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #09090b;
+  --color-foreground: #fafafa;
+  --color-card: #18181b;
+  --color-border: #27272a;
+  --color-primary: #ef4444;
+  --radius-xl: 0.75rem;
+}
+
+body {
+  background-color: #09090b;
+  color: #fafafa;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+@utility glass-morphism {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@utility gradient-text {
+  @apply bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent;
+}
+
+@utility premium-card {
+  @apply bg-zinc-900 border border-zinc-800 rounded-xl transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-800/80;
+}
