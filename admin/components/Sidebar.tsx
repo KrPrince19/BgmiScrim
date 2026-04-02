@@ -31,7 +31,7 @@ export default function Sidebar() {
                         <Gamepad2 className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                        <div className="font-black text-sm tracking-tight">BGMI SCRIM</div>
+                        <div className="font-black text-sm tracking-tight">Frag Zone</div>
                         <div className="text-[10px] text-red-500 uppercase tracking-widest font-bold">Admin Panel</div>
                     </div>
                 </div>
