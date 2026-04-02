@@ -1,11 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { motion } from "framer-motion";
-import { ShieldAlert, ChevronLeft, Gavel, Scale, AlertOctagon, CheckCircle2 } from "lucide-react";
-import Link from "next/link";
+import { ShieldAlert, ChevronLeft, Gavel, Scale, AlertOctagon, CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function TermsPage() {
+function TermsContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const returnTo = searchParams.get("returnTo");
@@ -140,6 +140,18 @@ export default function TermsPage() {
     );
 }
 
+export default function TermsPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-black flex items-center justify-center">
+                <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
+            </div>
+        }>
+            <TermsContent />
+        </Suspense>
+    );
+}
+
 function Section({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
     return (
         <motion.div
@@ -156,3 +168,4 @@ function Section({ title, icon, children }: { title: string; icon: React.ReactNo
         </motion.div>
     );
 }
+
