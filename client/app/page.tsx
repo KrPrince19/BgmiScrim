@@ -48,7 +48,7 @@ export default function LandingPage() {
             <div className="bg-blue-600 p-2 rounded-lg">
               <Gamepad2 className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold tracking-tighter">BGMI SCRIM</span>
+            <span className="text-xl font-bold tracking-tighter">Frag Zone</span>
           </div>
           <div className="flex items-center gap-6 text-sm font-medium">
             <Link href="/results" className="text-zinc-100 hover:text-white transition-colors">
