@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import Sidebar from "@/components/Sidebar";
+import MobileHeader from "@/components/MobileHeader";
 import { Loader2, Trophy, Clock, KeySquare, Save, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -14,6 +15,7 @@ export default function RoomPage() {
     const [saving, setSaving] = useState<string | null>(null);
     const [saved, setSaved] = useState<string | null>(null);
     const [roomData, setRoomData] = useState<Record<string, { roomID: string; roomPassword: string }>>({});
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
         if (authLoading || !user) return;
@@ -50,9 +52,11 @@ export default function RoomPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-black text-white">
-            <Sidebar />
-            <main className="flex-1 p-8 overflow-y-auto">
+        <div className="flex flex-col lg:flex-row min-h-screen bg-black text-white">
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+            <div className="flex-1 flex flex-col min-h-screen">
+                <MobileHeader onOpenSidebar={() => setIsSidebarOpen(true)} />
+                <main className="flex-1 p-6 lg:p-10 overflow-y-auto">
                 <div className="max-w-4xl mx-auto">
                     <div className="mb-8">
                         <h1 className="text-4xl font-black tracking-tight mb-1">Room Management</h1>
@@ -136,5 +140,6 @@ export default function RoomPage() {
                 </div>
             </main>
         </div>
-    );
+    </div>
+);
 }

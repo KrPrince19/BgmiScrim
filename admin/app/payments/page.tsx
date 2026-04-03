@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import Sidebar from "@/components/Sidebar";
+import MobileHeader from "@/components/MobileHeader";
 import {
     Loader2, CheckCircle2, XCircle, Clock, Filter, User, Banknote, Eye, X, ExternalLink, ImageIcon
 } from "lucide-react";
@@ -23,6 +24,7 @@ export default function PaymentsPage() {
     const [filter, setFilter] = useState("all");
     const [updating, setUpdating] = useState<string | null>(null);
     const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const socket = useSocket();
 
     const fetchPayments = async () => {
@@ -69,9 +71,11 @@ export default function PaymentsPage() {
     const filters = ["all", "pending", "approved", "rejected"];
 
     return (
-        <div className="flex min-h-screen bg-black text-white">
-            <Sidebar />
-            <main className="flex-1 p-8 overflow-y-auto">
+        <div className="flex flex-col lg:flex-row min-h-screen bg-black text-white">
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+            <div className="flex-1 flex flex-col min-h-screen">
+                <MobileHeader onOpenSidebar={() => setIsSidebarOpen(true)} />
+                <main className="flex-1 p-6 lg:p-10 overflow-y-auto">
                 <div className="max-w-6xl mx-auto">
                     <div className="mb-8">
                         <h1 className="text-4xl font-black tracking-tight mb-1">Payments</h1>
@@ -238,6 +242,9 @@ export default function PaymentsPage() {
                     </motion.div>
                 )}
             </AnimatePresence>
+                </div>
+            </main>
         </div>
-    );
+    </div>
+);
 }

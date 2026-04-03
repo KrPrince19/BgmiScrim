@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import Sidebar from "@/components/Sidebar";
+import MobileHeader from "@/components/MobileHeader";
 import { Loader2, Trophy, Users, Trash2, Phone, Mail, UserCheck } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -15,6 +16,7 @@ export default function PlayersPage() {
     const [loadingScrims, setLoadingScrims] = useState(true);
     const [loadingPlayers, setLoadingPlayers] = useState(false);
     const [removing, setRemoving] = useState<string | null>(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
         if (authLoading || !user) return;
@@ -55,9 +57,11 @@ export default function PlayersPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-black text-white">
-            <Sidebar />
-            <main className="flex-1 p-8 overflow-y-auto">
+        <div className="flex flex-col lg:flex-row min-h-screen bg-black text-white">
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+            <div className="flex-1 flex flex-col min-h-screen">
+                <MobileHeader onOpenSidebar={() => setIsSidebarOpen(true)} />
+                <main className="flex-1 p-6 lg:p-10 overflow-y-auto">
                 <div className="max-w-5xl mx-auto">
                     <div className="mb-8">
                         <h1 className="text-4xl font-black tracking-tight mb-1">Player Management</h1>
@@ -148,5 +152,6 @@ export default function PlayersPage() {
                 </div>
             </main>
         </div>
-    );
+    </div>
+);
 }

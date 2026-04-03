@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import Sidebar from "@/components/Sidebar";
+import MobileHeader from "@/components/MobileHeader";
 import { Loader2, Trophy, User, Zap, Star, Check, Plus, Trash2, LayoutGrid, List } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSocket } from "@/context/SocketContext";
@@ -20,6 +21,7 @@ export default function LeaderboardAdmin() {
     const [liveLeaderboard, setLiveLeaderboard] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [publishing, setPublishing] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const socket = useSocket();
 
     const fetchInitialData = async () => {
@@ -102,9 +104,11 @@ export default function LeaderboardAdmin() {
     }
 
     return (
-        <div className="flex min-h-screen bg-black text-white selection:bg-red-500/30">
-            <Sidebar />
-            <main className="flex-1 p-8 overflow-y-auto">
+        <div className="flex flex-col lg:flex-row min-h-screen bg-black text-white selection:bg-red-500/30">
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+            <div className="flex-1 flex flex-col min-h-screen">
+                <MobileHeader onOpenSidebar={() => setIsSidebarOpen(true)} />
+                <main className="flex-1 p-6 lg:p-10 overflow-y-auto">
                 <div className="max-w-6xl mx-auto">
                     <div className="mb-10">
                         <h1 className="text-4xl font-black tracking-tight mb-2 uppercase text-red-600">Leaderboard Manager</h1>
@@ -285,8 +289,8 @@ export default function LeaderboardAdmin() {
                             )}
                         </div>
                     </div>
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
     );
 }

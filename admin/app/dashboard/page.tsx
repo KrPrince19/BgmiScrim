@@ -5,6 +5,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { useSocket } from "@/context/SocketContext";
 import Sidebar from "@/components/Sidebar";
+import MobileHeader from "@/components/MobileHeader";
 import { Loader2, Users, Trophy, CreditCard, CheckCircle2, Clock, Globe, AlertCircle, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -13,6 +14,7 @@ export default function AdminDashboard() {
     const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [sessionError, setSessionError] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const socket = useSocket();
 
     useEffect(() => {
@@ -45,9 +47,11 @@ export default function AdminDashboard() {
     ];
 
     return (
-        <div className="flex min-h-screen bg-black text-white">
-            <Sidebar />
-            <main className="flex-1 p-8 overflow-y-auto">
+        <div className="flex flex-col lg:flex-row min-h-screen bg-black text-white">
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+            <div className="flex-1 flex flex-col min-h-screen">
+                <MobileHeader onOpenSidebar={() => setIsSidebarOpen(true)} />
+                <main className="flex-1 p-6 lg:p-10 overflow-y-auto">
                 <div className="max-w-5xl mx-auto">
                     <div className="mb-10">
                         <h1 className="text-4xl font-black tracking-tight mb-1">
@@ -121,7 +125,8 @@ export default function AdminDashboard() {
                 </div>
             </main>
         </div>
-    );
+    </div>
+);
 }
 
 function PlatformConfig() {

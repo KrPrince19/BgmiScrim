@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import Sidebar from "@/components/Sidebar";
+import MobileHeader from "@/components/MobileHeader";
 import {
     Loader2, Plus, Pencil, Trash2, X, Check, Trophy, Clock, Search, Zap
 } from "lucide-react";
@@ -152,6 +153,8 @@ export default function ScrimsPage() {
         }
     };
 
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    
     if (authLoading || !user || loading) {
         return (
             <div className="min-h-screen bg-black flex items-center justify-center">
@@ -161,9 +164,11 @@ export default function ScrimsPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-black text-white">
-            <Sidebar />
-            <main className="flex-1 p-8 overflow-y-auto">
+        <div className="flex flex-col lg:flex-row min-h-screen bg-black text-white">
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+            <div className="flex-1 flex flex-col min-h-screen">
+                <MobileHeader onOpenSidebar={() => setIsSidebarOpen(true)} />
+                <main className="flex-1 p-6 lg:p-10 overflow-y-auto">
                 <div className="max-w-6xl mx-auto">
                     <div className="flex items-center justify-between mb-8">
                         <div>
@@ -399,6 +404,9 @@ export default function ScrimsPage() {
                     </div>
                 )}
             </AnimatePresence>
+                </div>
+            </main>
         </div>
-    );
+    </div>
+);
 }
