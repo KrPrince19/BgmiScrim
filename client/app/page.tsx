@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Gamepad2, Trophy, Shield, Zap, ChevronRight, User as UserIcon, Play } from "lucide-react";
+import { Gamepad2, Trophy, Shield, Zap, ChevronRight, User as UserIcon, Play, Menu, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { useSocket } from "@/context/SocketContext";
 
 export default function LandingPage() {
   const { user } = useAuth();
   const socket = useSocket();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [youtubeUrl, setYoutubeUrl] = useState("https://www.youtube.com/@MAjorZMBGMI");
 
   useEffect(() => {
@@ -44,46 +45,96 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 glass-morphism border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <div className="bg-blue-600 p-2 rounded-lg">
               <Gamepad2 className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold tracking-tighter">Frag Zone</span>
-          </div>
-          <div className="flex items-center gap-6 text-sm font-medium">
-            <Link href="/results" className="text-zinc-100 hover:text-white transition-colors">
+            <span className="text-xl font-bold tracking-tighter uppercase italic">Frag Zone</span>
+          </Link>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-tight">
+            <Link href="/results" className="text-zinc-400 hover:text-white transition-colors">
               Results
             </Link>
-            <Link href="/leaderboard" className="text-zinc-100 hover:text-white transition-colors">
+            <Link href="/leaderboard" className="text-zinc-400 hover:text-white transition-colors">
               Leaderboard
             </Link>
             {user ? (
               <>
-                <Link href="/dashboard" className="text-zinc-100 hover:text-white transition-colors">
+                <Link href="/dashboard" className="text-zinc-400 hover:text-white transition-colors">
                   Dashboard
                 </Link>
                 <Link
                   href="/profile"
-                  className="px-5 py-2.5 rounded-full bg-white text-black text-sm font-bold hover:bg-zinc-200 transition-all transform hover:scale-105 flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-black hover:bg-blue-500 transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg shadow-blue-600/20"
                 >
                   <UserIcon className="h-4 w-4" /> Profile
                 </Link>
               </>
             ) : (
               <>
-                <Link href="/login" className="text-zinc-100 hover:text-white transition-colors">
+                <Link href="/login" className="text-zinc-400 hover:text-white transition-colors">
                   Log In
                 </Link>
                 <Link
                   href="/register"
-                  className="px-5 py-2.5 rounded-full bg-white text-black text-sm font-bold hover:bg-zinc-200 transition-all transform hover:scale-105"
+                  className="px-6 py-3 rounded-full bg-white text-black text-xs font-black hover:bg-zinc-200 transition-all transform hover:scale-105 uppercase tracking-widest"
                 >
                   Join Now
                 </Link>
               </>
             )}
           </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2 text-zinc-400 hover:text-white transition-colors"
+          >
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
+
+        {/* Mobile Nav Overlay */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-zinc-950 border-b border-white/5 overflow-hidden"
+            >
+              <div className="flex flex-col p-6 gap-4 text-sm font-bold uppercase tracking-widest">
+                <Link href="/results" onClick={() => setIsMenuOpen(false)} className="text-zinc-400 hover:text-white py-2 border-b border-white/5">
+                  Results
+                </Link>
+                <Link href="/leaderboard" onClick={() => setIsMenuOpen(false)} className="text-zinc-400 hover:text-white py-2 border-b border-white/5">
+                  Leaderboard
+                </Link>
+                {user ? (
+                  <>
+                    <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="text-zinc-400 hover:text-white py-2 border-b border-white/5">
+                      Dashboard
+                    </Link>
+                    <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="text-blue-500 py-2 border-b border-white/5">
+                      Profile
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login" onClick={() => setIsMenuOpen(false)} className="text-zinc-400 hover:text-white py-2 border-b border-white/5">
+                      Log In
+                    </Link>
+                    <Link href="/register" onClick={() => setIsMenuOpen(false)} className="text-white bg-blue-600 px-4 py-3 rounded-xl text-center mt-2">
+                      Join Now
+                    </Link>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero Section */}
