@@ -289,6 +289,7 @@ export default function LeaderboardAdmin() {
                             )}
                         </div>
                     </div>
+                </div>
                 </main>
             </div>
         </div>
