@@ -261,8 +261,6 @@ export default function ScrimsPage() {
                             ))
                         )}
                     </div>
-                </div>
-            </main>
 
             {/* Create/Edit Modal */}
             <AnimatePresence>
@@ -403,10 +401,10 @@ export default function ScrimsPage() {
                         </motion.div>
                     </div>
                 )}
-            </AnimatePresence>
+                    </AnimatePresence>
                 </div>
             </main>
         </div>
     </div>
-);
+    );
 }

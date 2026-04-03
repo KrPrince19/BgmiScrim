@@ -122,11 +122,10 @@ export default function AdminDashboard() {
                         {/* Platform Configuration */}
                         <PlatformConfig />
                     </div>
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
-    </div>
-);
+    );
 }
 
 function PlatformConfig() {
