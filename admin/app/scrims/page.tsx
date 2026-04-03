@@ -267,7 +267,7 @@ export default function ScrimsPage() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="glass-morphism border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl"
+                            className="glass-morphism border border-white/10 rounded-[2.5rem] p-8 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar"
                         >
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-2xl font-black uppercase tracking-tighter italic text-white">{editingScrim ? "Edit Scrim" : "New Scrim"}</h2>
