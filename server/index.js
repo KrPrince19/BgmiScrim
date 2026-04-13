@@ -9,6 +9,7 @@ const scrimRoutes = require('./routes/scrims');
 const paymentRoutes = require('./routes/payments');
 const leaderboardRoutes = require('./routes/leaderboard');
 const settingsRoutes = require('./routes/settings');
+const storeRoutes = require('./routes/store');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -72,6 +73,7 @@ app.use('/api/scrims', scrimRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/store', storeRoutes);
 
 // Custom Error Logger
 app.use((err, req, res, next) => {

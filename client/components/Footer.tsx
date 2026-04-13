@@ -53,16 +53,21 @@ export default function Footer() {
                         <ul className="space-y-4">
                             <li>
                                 <Link
-                                    href="https://chat.whatsapp.com/E0Xvkc1PdSFCUZFyjJX4Ep?mode=gi_t"
+                                    href="https://chat.whatsapp.com/GMlsUSOnnLQFQfuujlD0G0?mode=gi_t"
                                     target="_blank"
                                     className="flex items-center gap-3 text-zinc-500 text-sm font-medium hover:text-white transition-colors cursor-pointer"
                                 >
                                     <MessageCircle className="h-4 w-4 text-emerald-500" /> WhatsApp Support
                                 </Link>
                             </li>
-                            <li className="flex items-center gap-3 text-zinc-500 text-sm font-medium hover:text-white transition-colors cursor-pointer">
+                             <li className="flex items-center gap-3 text-zinc-500 text-sm font-medium hover:text-white transition-colors cursor-pointer">
+                                <Link href="https://wa.me/916205597789" target="_blank" className="flex items-center gap-3">
+                                    <MessageCircle className="h-4 w-4 text-emerald-500" /> 6205597789
+                                </Link>
+                             </li>
+                             <li className="flex items-center gap-3 text-zinc-500 text-sm font-medium hover:text-white transition-colors cursor-pointer">
                                 <MapPin className="h-4 w-4 text-red-500" /> Patna, India
-                            </li>
+                             </li>
                         </ul>
                     </div>
                 </div>
@@ -79,12 +84,12 @@ export default function Footer() {
                         <div>
                             <h4 className="text-white font-black uppercase tracking-tight text-sm mb-1">Need Immediate Support?</h4>
                             <p className="text-zinc-500 text-xs font-medium leading-relaxed max-w-md">
-                                For any issues regarding <span className="text-white font-bold">Payments</span>, <span className="text-white font-bold">Team Names</span>, or <span className="text-white font-bold">Player Rosters</span>, please contact our administrative team directly.
+                                For any issues regarding <span className="text-white font-bold">Payments</span>, <span className="text-white font-bold">Team Names</span>, or <span className="text-white font-bold">Player Rosters</span>, please contact our administrative team directly at <span className="text-white font-bold">6205597789</span>.
                             </p>
                         </div>
                     </div>
                     <Link 
-                        href="https://chat.whatsapp.com/E0Xvkc1PdSFCUZFyjJX4Ep?mode=gi_t"
+                        href="https://chat.whatsapp.com/GMlsUSOnnLQFQfuujlD0G0?mode=gi_t"
                         target="_blank"
                         className="relative z-10 px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-emerald-600/20 active:scale-95"
                     >

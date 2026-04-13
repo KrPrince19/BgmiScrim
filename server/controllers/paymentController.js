@@ -1,6 +1,7 @@
 const Payment = require('../models/Payment');
 const Scrim = require('../models/Scrim');
 const User = require('../models/User');
+const StoreItem = require('../models/StoreItem');
 
 // Join a scrim
 exports.joinScrim = async (req, res) => {
@@ -53,6 +54,51 @@ exports.joinScrim = async (req, res) => {
   }
 };
 
+// Buy a store item
+exports.buyStoreItem = async (req, res) => {
+  try {
+    const { transactionID, storeItemId } = req.body;
+
+    if (!transactionID || transactionID.length !== 12) {
+      return res.status(400).json({ message: 'Transaction ID (UTR) must be exactly 12 characters.' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'Payment screenshot is required.' });
+    }
+
+    const item = await StoreItem.findById(storeItemId);
+    if (!item) return res.status(404).json({ message: 'Store item not found' });
+
+    if (item.isOutOfStock) {
+      return res.status(400).json({ message: 'This item is currently out of stock.' });
+    }
+
+    const payment = await Payment.create({
+      user: req.user._id,
+      paymentType: 'store',
+      storeItem: storeItemId,
+      itemName: item.name,
+      priceAtPurchase: item.price,
+      transactionID,
+      screenshot: `/uploads/${req.file.filename}`
+    });
+
+    // Emit Real-time Update for Admin
+    if (req.io) {
+      req.io.emit('newPayment', {
+        message: `New purchase request from ${req.user.username}`,
+        itemName: item.name,
+        type: 'store'
+      });
+    }
+
+    res.status(201).json(payment);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Check payment status
 exports.getPaymentStatus = async (req, res) => {
   try {
@@ -77,8 +123,24 @@ exports.getPaymentStatus = async (req, res) => {
 // Get all user join requests
 exports.getMyPayments = async (req, res) => {
   try {
-    const payments = await Payment.find({ user: req.user._id }).populate('scrim', 'matchName time');
-    res.json(payments);
+    const payments = await Payment.find({ user: req.user._id })
+      .populate('scrim', 'matchName time roomID roomPassword')
+      .populate('storeItem', 'name category imageUrl price')
+      .sort({ createdAt: -1 });
+
+    // Sanitize room details - only show if payment is approved
+    const sanitizedPayments = payments.map(p => {
+      const payment = p.toObject();
+      if (payment.paymentType === 'scrim' && payment.status !== 'approved') {
+        if (payment.scrim) {
+          payment.scrim.roomID = undefined;
+          payment.scrim.roomPassword = undefined;
+        }
+      }
+      return payment;
+    });
+
+    res.json(sanitizedPayments);
   } catch (error) {
     const fs = require('fs');
     fs.appendFileSync('error.log', `[${new Date().toISOString()}] getMyPayments in payment controller: ${error.stack}\n`);
@@ -94,6 +156,7 @@ exports.getAllPayments = async (req, res) => {
     const payments = await Payment.find(filter)
       .populate('user', 'username email phone')
       .populate('scrim', 'matchName time entryFee')
+      .populate('storeItem', 'name category price imageUrl')
       .sort({ createdAt: -1 });
     res.json(payments);
   } catch (error) {
@@ -128,6 +191,11 @@ exports.updatePaymentStatus = async (req, res) => {
       if (req.io && updatedScrim) {
         req.io.emit('scrimUpdate', updatedScrim);
       }
+    }
+
+    // Emit real-time status update for the user
+    if (req.io) {
+      req.io.emit('paymentUpdate', payment);
     }
 
     res.json(payment);

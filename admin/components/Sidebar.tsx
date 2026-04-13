@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { useSocket } from "@/context/SocketContext";
-import { Gamepad2, LayoutDashboard, CreditCard, Trophy, LogOut, DoorOpen, Users, Award } from "lucide-react";
+import { Gamepad2, LayoutDashboard, CreditCard, Trophy, LogOut, DoorOpen, Users, Award, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
@@ -15,6 +15,7 @@ const navItems = [
     { href: "/payments", label: "Payments", icon: CreditCard },
     { href: "/room", label: "Room Management", icon: DoorOpen },
     { href: "/players", label: "Players", icon: Users },
+    { href: "/store", label: "Store", icon: ShoppingBag },
 ];
 
 interface SidebarProps {

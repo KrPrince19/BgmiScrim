@@ -54,6 +54,9 @@ export default function LandingPage() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-tight">
+            <Link href="/store" className="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1">
+              Store
+            </Link>
             <Link href="/results" className="text-zinc-400 hover:text-white transition-colors">
               Results
             </Link>
@@ -106,6 +109,9 @@ export default function LandingPage() {
               className="md:hidden bg-zinc-950 border-b border-white/5 overflow-hidden"
             >
               <div className="flex flex-col p-6 gap-4 text-sm font-bold uppercase tracking-widest">
+                <Link href="/store" onClick={() => setIsMenuOpen(false)} className="text-emerald-400 hover:text-emerald-300 py-2 border-b border-white/5">
+                  Store
+                </Link>
                 <Link href="/results" onClick={() => setIsMenuOpen(false)} className="text-zinc-400 hover:text-white py-2 border-b border-white/5">
                   Results
                 </Link>
@@ -184,7 +190,7 @@ export default function LandingPage() {
               Explore Matches <ChevronRight className="h-5 w-5" />
             </Link>
             <Link
-              href="https://chat.whatsapp.com/E0Xvkc1PdSFCUZFyjJX4Ep?mode=gi_t"
+              href="https://chat.whatsapp.com/GMlsUSOnnLQFQfuujlD0G0?mode=gi_t"
               target="_blank"
               className="w-full sm:w-auto px-8 py-4 bg-zinc-900 border border-zinc-800 rounded-2xl font-bold text-lg hover:border-emerald-500/30 hover:text-emerald-400 transition-all text-center flex items-center justify-center gap-2"
             >

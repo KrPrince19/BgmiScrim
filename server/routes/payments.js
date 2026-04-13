@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {
-    joinScrim, getPaymentStatus, getMyPayments,
+    joinScrim, buyStoreItem, getPaymentStatus, getMyPayments,
     getAllPayments, updatePaymentStatus, getDashboardStats,
     getScrimPlayers, removePlayer, getScrimParticipants
 } = require('../controllers/paymentController');
@@ -33,6 +33,7 @@ const upload = multer({
 
 // Player routes
 router.post('/join', protect, upload.single('screenshot'), joinScrim);
+router.post('/buy-item', protect, upload.single('screenshot'), buyStoreItem);
 router.get('/my-payments', protect, getMyPayments);
 router.get('/status/:scrimId', protect, getPaymentStatus);
 
