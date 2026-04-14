@@ -65,7 +65,7 @@ export default function Footer() {
                                 colorClass="text-red-500"
                             />
                             
-                            {isInstallable && (
+                            {isInstallable ? (
                                 <button
                                     onClick={handleInstallClick}
                                     className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-blue-600/20"
@@ -73,6 +73,23 @@ export default function Footer() {
                                     <Download className="h-4 w-4" />
                                     Install App
                                 </button>
+                            ) : (
+                                <div className="group relative">
+                                    <button
+                                        className="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-white/5 hover:border-blue-500/20 text-zinc-400 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                    >
+                                        How to Install?
+                                    </button>
+                                    <div className="absolute bottom-full left-0 mb-4 w-64 p-4 bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                                        <p className="text-white text-[11px] font-bold uppercase mb-2">Android / Laptop</p>
+                                        <p className="text-zinc-500 text-[10px] mb-3 leading-relaxed">Wait for the prompt or use the browser menu to "Install App".</p>
+                                        
+                                        <div className="h-px bg-white/5 mb-3" />
+                                        
+                                        <p className="text-white text-[11px] font-bold uppercase mb-2">iPhone (Safari)</p>
+                                        <p className="text-zinc-500 text-[10px] leading-relaxed">Tap the <span className="text-blue-500 font-bold">Share</span> icon below, then select <span className="text-white font-bold">'Add to Home Screen'</span>.</p>
+                                    </div>
+                                </div>
                             )}
                         </div>
                     </div>
