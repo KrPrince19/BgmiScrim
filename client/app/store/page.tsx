@@ -16,18 +16,26 @@ import {
   QrCode,
   Copy,
   ImageIcon,
+  CheckCircle2,
+  Upload,
+  ShieldCheck,
+  Crown,
+  Car,
+  ChevronRight,
+  Info,
+  BarChart3,
+  X,
   Loader2,
   AlertCircle,
-  X,
-  CheckCircle2,
-  Upload
+  User,
+  MessageCircle
 } from "lucide-react";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
 // Types
-type Category = "All" | "Outfits" | "Gun Skins" | "X-Suits" | "UC";
+type Category = "All" | "Outfits" | "Gun Skins" | "X-Suits" | "UC" | "Accounts";
 
 interface StoreItem {
   _id: string;
@@ -42,6 +50,7 @@ interface StoreItem {
   isDealOfDay: boolean;
   isOutOfStock: boolean;
   isHidden: boolean;
+  description?: string;
 }
 
 const CATEGORIES: { name: Category; icon: any }[] = [
@@ -50,6 +59,7 @@ const CATEGORIES: { name: Category; icon: any }[] = [
   { name: "Gun Skins", icon: Crosshair },
   { name: "X-Suits", icon: Star },
   { name: "UC", icon: Zap },
+  { name: "Accounts", icon: ShieldCheck },
 ];
 
 export default function StorePage() {
@@ -69,6 +79,50 @@ export default function StorePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentError, setPaymentError] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+
+  // Detailed Account View State
+  const [selectedAccount, setSelectedAccount] = useState<StoreItem | null>(null);
+
+  const parseDescription = (desc?: string) => {
+    if (!desc) return [];
+    
+    const lines = desc.split('\n').map(l => l.trim()).filter(l => l);
+    const result: { category: string; items: string[]; icon: any }[] = [];
+    
+    let currentCategory = { category: "General Info", items: [] as string[], icon: Info };
+
+    const keywords: { [key: string]: { label: string; icon: any } } = {
+       "XSUIT": { label: "X-Suits", icon: User },
+       "GUNLAB": { label: "Gun Lab", icon: Crosshair },
+       "SUPERCARS": { label: "Supercars", icon: Car },
+       "LOGINS": { label: "Login Info", icon: ShieldCheck },
+       "ULTIMATE": { label: "Ultimate Sets", icon: Crown },
+       "MYTHIC": { label: "Mythic Lobbies", icon: Star },
+       "MATERIAL": { label: "Materials", icon: Zap },
+       "ACC LVL": { label: "Account Stats", icon: BarChart3 },
+    };
+
+    lines.forEach(line => {
+      const upperLine = line.toUpperCase();
+      let foundHeader = false;
+
+      for (const [key, data] of Object.entries(keywords)) {
+        if (upperLine.includes(key) && line.length < 25) { // Likely a header
+           if (currentCategory.items.length > 0) result.push(currentCategory);
+           currentCategory = { category: data.label, items: [], icon: data.icon };
+           foundHeader = true;
+           break;
+        }
+      }
+
+      if (!foundHeader) {
+        currentCategory.items.push(line);
+      }
+    });
+
+    if (currentCategory.items.length > 0) result.push(currentCategory);
+    return result;
+  };
 
   const UPI_ID = "7091910259@ybl";
 
@@ -256,22 +310,35 @@ export default function StorePage() {
                 </p>
                 
                 <div className="flex items-end gap-3">
-                  <span className="text-4xl font-bold">{dealOfDay.price} UC</span>
-                  {dealOfDay.discount > 0 && <span className="text-xl text-zinc-500 line-through mb-1">{dealOfDay.originalPrice} UC</span>}
-                  {dealOfDay.discount > 0 && <span className="text-sm font-semibold text-emerald-400 mb-1.5 ml-2 bg-emerald-500/10 px-2 py-0.5 rounded">{dealOfDay.discount}% OFF</span>}
+                  <span className="text-4xl font-bold">
+                    {dealOfDay.price > 0 ? `${dealOfDay.price} UC` : "DM to buy"}
+                  </span>
+                  {dealOfDay.discount > 0 && dealOfDay.price > 0 && <span className="text-xl text-zinc-500 line-through mb-1">{dealOfDay.originalPrice} UC</span>}
+                  {dealOfDay.discount > 0 && dealOfDay.price > 0 && <span className="text-sm font-semibold text-emerald-400 mb-1.5 ml-2 bg-emerald-500/10 px-2 py-0.5 rounded">{dealOfDay.discount}% OFF</span>}
                 </div>
                 
-                <button 
-                  onClick={() => openPurchaseModal(dealOfDay)}
-                  disabled={dealOfDay.isOutOfStock}
-                  className={`flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold transition-all duration-300 w-full md:w-auto ${dealOfDay.isOutOfStock ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed' : 'bg-zinc-100 text-zinc-900 hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]'}`}
-                >
-                  {dealOfDay.isOutOfStock ? (
-                      <><PackageX className="w-5 h-5" /> Out of Stock</>
-                  ) : (
-                      <><ShoppingCart className="w-5 h-5" /> Purchase Now</>
-                  )}
-                </button>
+                {dealOfDay.price > 0 ? (
+                  <button 
+                    onClick={() => openPurchaseModal(dealOfDay)}
+                    disabled={dealOfDay.isOutOfStock}
+                    className={`flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold transition-all duration-300 w-full md:w-auto ${dealOfDay.isOutOfStock ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed' : 'bg-zinc-100 text-zinc-900 hover:bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]'}`}
+                  >
+                    {dealOfDay.isOutOfStock ? (
+                        <><PackageX className="w-5 h-5" /> Out of Stock</>
+                    ) : (
+                        <><ShoppingCart className="w-5 h-5" /> Purchase Now</>
+                    )}
+                  </button>
+                ) : (
+                  <a 
+                    href="https://wa.me/916205597789"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all duration-300 w-full md:w-auto shadow-lg shadow-emerald-600/20"
+                  >
+                    <MessageCircle className="w-5 h-5" /> WhatsApp: 6205597789
+                  </a>
+                )}
               </div>
               
               <div className="flex-1 w-full flex justify-center relative">
@@ -407,22 +474,43 @@ export default function StorePage() {
 
                         <div className="mt-auto flex items-end justify-between">
                           <div>
-                            {item.discount > 0 && (
+                            {item.discount > 0 && item.price > 0 && (
                               <p className="text-sm text-zinc-500 line-through">{item.originalPrice} UC</p>
                             )}
                             <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-emerald-200">
-                              {item.price} UC
+                              {item.price > 0 ? `${item.price} UC` : "DM to buy"}
                             </p>
                           </div>
                           
-                          <button 
-                            onClick={() => openPurchaseModal(item)}
-                            disabled={item.isOutOfStock}
-                            className={`p-3 rounded-xl transition-all duration-300 shadow-md group/btn relative overflow-hidden ${item.isOutOfStock ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-800 hover:bg-blue-600 text-white'}`}
-                          >
-                            {!item.isOutOfStock && <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>}
-                            <ShoppingCart className="w-5 h-5 relative z-10" />
-                          </button>
+                          <div className="flex flex-col gap-2">
+                            {item.description && (
+                              <button 
+                                onClick={() => setSelectedAccount(item)}
+                                className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-bold transition-all border border-blue-500/20"
+                              >
+                                <Info className="w-3.5 h-3.5" /> View Stats
+                              </button>
+                            )}
+                            {item.price > 0 ? (
+                              <button 
+                                onClick={() => openPurchaseModal(item)}
+                                disabled={item.isOutOfStock}
+                                className={`p-3 rounded-xl transition-all duration-300 shadow-md group/btn relative overflow-hidden ${item.isOutOfStock ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-800 hover:bg-blue-600 text-white'}`}
+                              >
+                                {!item.isOutOfStock && <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>}
+                                <ShoppingCart className="w-5 h-5 relative z-10 mx-auto" />
+                              </button>
+                            ) : (
+                              <a 
+                                href="https://wa.me/916205597789"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 rounded-xl transition-all duration-300 flex items-center justify-center border border-emerald-500/20 group/wa"
+                              >
+                                <MessageCircle className="w-5 h-5 group-hover/wa:scale-110 transition-transform" />
+                              </a>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </motion.div>
@@ -574,6 +662,110 @@ export default function StorePage() {
                     </button>
                   </form>
                 )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* Account Details Modal */}
+      <AnimatePresence>
+        {selectedAccount && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 40 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 40 }}
+              className="relative max-w-4xl w-full bg-[#0c0c0e] rounded-[2rem] border border-white/10 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col md:flex-row max-h-[90vh]"
+            >
+              {/* Left Side: Hero Image */}
+              <div className="w-full md:w-[40%] bg-zinc-900/50 relative flex items-center justify-center p-8 border-b md:border-b-0 md:border-r border-white/5">
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 to-transparent opacity-60"></div>
+                <div className={`absolute top-8 left-8 px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest border border-white/10 backdrop-blur-md
+                  ${selectedAccount.rarity === 'Mythic' ? 'bg-amber-500/20 text-amber-400' : 
+                    selectedAccount.rarity === 'Legendary' ? 'bg-fuchsia-500/20 text-fuchsia-400' : 
+                    'bg-blue-500/20 text-blue-400'}`}>
+                  {selectedAccount.rarity} Account
+                </div>
+                
+                <img 
+                  src={`${SERVER_URL}${selectedAccount.imageUrl}`} 
+                  alt={selectedAccount.name} 
+                  className="relative z-10 max-w-full max-h-full object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+                />
+
+                <div className="absolute bottom-8 left-8 right-8 z-20">
+                   <h2 className="text-2xl font-black text-white leading-tight mb-2">{selectedAccount.name}</h2>
+                   <div className="text-3xl font-black text-emerald-400">
+                      {selectedAccount.price > 0 ? `${selectedAccount.price} UC` : "DM to buy"}
+                   </div>
+                </div>
+              </div>
+
+              {/* Right Side: Details */}
+              <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                   <div className="flex items-center gap-2">
+                      <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
+                      <span className="font-black uppercase tracking-tighter text-sm italic">Account Statistics</span>
+                   </div>
+                   <button 
+                     onClick={() => setSelectedAccount(null)}
+                     className="p-2 hover:bg-white/5 rounded-full text-zinc-500 hover:text-white transition-colors"
+                   >
+                     <X className="w-6 h-6" />
+                   </button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-8 custom-scrollbar min-h-0 relative">
+                   <div className="absolute inset-x-0 top-0 h-4 bg-gradient-to-b from-[#0c0c0e] to-transparent pointer-events-none z-10"></div>
+                   <div className="absolute inset-x-0 bottom-0 h-4 bg-gradient-to-t from-[#0c0c0e] to-transparent pointer-events-none z-10"></div>
+                   <div className="grid grid-cols-1 gap-6">
+                      {parseDescription(selectedAccount.description).map((section, idx) => (
+                        <div key={idx} className="space-y-3">
+                           <div className="flex items-center gap-2 opacity-50">
+                              <section.icon className="w-4 h-4" />
+                              <span className="text-[10px] font-black uppercase tracking-[0.2em]">{section.category}</span>
+                           </div>
+                           <div className="flex flex-col gap-1.5">
+                              {section.items.map((item, i) => (
+                                <div key={i} className="flex items-start gap-3 py-1 group">
+                                   <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
+                                   <span className="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors leading-relaxed uppercase tracking-wide">{item}</span>
+                                </div>
+                              ))}
+                           </div>
+                        </div>
+                      ))}
+                   </div>
+                </div>
+
+                <div className="p-6 bg-zinc-950/50 border-t border-white/5">
+                   {selectedAccount.price > 0 ? (
+                      <button 
+                        onClick={() => {
+                          setSelectedAccount(null);
+                          openPurchaseModal(selectedAccount);
+                        }}
+                        className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-3"
+                      >
+                         <ShoppingCart className="w-5 h-5" /> Proceed to Purchase
+                      </button>
+                   ) : (
+                      <a 
+                        href="https://wa.me/916205597789"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-3"
+                      >
+                         <MessageCircle className="w-5 h-5" /> Contact: 6205597789
+                      </a>
+                   )}
+                </div>
               </div>
             </motion.div>
           </motion.div>

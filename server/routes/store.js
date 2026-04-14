@@ -59,7 +59,7 @@ router.post('/', protect, admin, upload.single('image'), async (req, res) => {
             return res.status(400).json({ message: "Image is required" });
         }
 
-        const { name, category, originalPrice, price, discount, rating, rarity, isDealOfDay } = req.body;
+        const { name, category, originalPrice, price, discount, rating, rarity, isDealOfDay, description } = req.body;
         
         const newItem = new StoreItem({
             name,
@@ -70,7 +70,8 @@ router.post('/', protect, admin, upload.single('image'), async (req, res) => {
             rating: rating ? Number(rating) : 5.0,
             rarity,
             imageUrl: `/uploads/${req.file.filename}`,
-            isDealOfDay: isDealOfDay === 'true'
+            isDealOfDay: isDealOfDay === 'true',
+            description
         });
 
         await newItem.save();

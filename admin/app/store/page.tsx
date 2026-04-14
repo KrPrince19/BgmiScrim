@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const emptyForm = { name: "", category: "Outfits", originalPrice: "", price: "", discount: "", rarity: "Epic", isDealOfDay: false };
+const emptyForm = { name: "", category: "Outfits", originalPrice: "", price: "", discount: "", rarity: "Epic", isDealOfDay: false, description: "" };
 
 export default function StoreManagePage() {
     const { user, loading: authLoading } = useAuth();
@@ -115,6 +115,7 @@ export default function StoreManagePage() {
             formData.append("discount", form.discount || "0");
             formData.append("rarity", form.rarity);
             formData.append("isDealOfDay", String(form.isDealOfDay));
+            formData.append("description", form.description || "");
             formData.append("image", imageFile);
 
             await api.post("/store", formData, {
@@ -209,8 +210,10 @@ export default function StoreManagePage() {
                                                     <h3 className="font-bold text-lg leading-tight line-clamp-1">{item.name}</h3>
                                                 </div>
                                                 <div className="text-right">
-                                                    <div className="text-emerald-400 font-black">{item.price} UC</div>
-                                                    {item.discount > 0 && <div className="text-zinc-500 text-xs line-through">{item.originalPrice} UC</div>}
+                                                    <div className="text-emerald-400 font-black">
+                                                        {item.price > 0 ? `${item.price} UC` : "DM to buy"}
+                                                    </div>
+                                                    {item.discount > 0 && item.price > 0 && <div className="text-zinc-500 text-xs line-through">{item.originalPrice} UC</div>}
                                                 </div>
                                             </div>
 
@@ -286,6 +289,7 @@ export default function StoreManagePage() {
                                                         <option value="Gun Skins">Gun Skins</option>
                                                         <option value="X-Suits">X-Suits</option>
                                                         <option value="UC">UC</option>
+                                                        <option value="Accounts">Accounts</option>
                                                     </select>
                                                 </div>
                                                 <div>
@@ -306,7 +310,7 @@ export default function StoreManagePage() {
                                                 <div>
                                                     <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">Original Price (UC)</label>
                                                     <input
-                                                        type="number" required placeholder="1000" min="0"
+                                                        type="number" placeholder="1000 (0 for DM to buy)" min="0"
                                                         className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-red-500 font-bold"
                                                         value={form.originalPrice} onChange={(e) => setForm({ ...form, originalPrice: e.target.value })}
                                                     />
@@ -314,7 +318,7 @@ export default function StoreManagePage() {
                                                 <div>
                                                     <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">Selling Price (UC)</label>
                                                     <input
-                                                        type="number" required placeholder="800" min="0"
+                                                        type="number" placeholder="800 (0 for DM to buy)" min="0"
                                                         className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-red-500 font-bold"
                                                         value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })}
                                                     />
@@ -341,6 +345,16 @@ export default function StoreManagePage() {
                                                         <span className="text-sm font-bold">Deal of the Day?</span>
                                                     </label>
                                                 </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">Detailed Description (Optional - For accounts/traits)</label>
+                                                <textarea
+                                                    rows={4}
+                                                    placeholder="Paste account details here (ACC LVL, XSUITS, etc.)"
+                                                    className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-red-500 font-medium text-sm custom-scrollbar"
+                                                    value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
+                                                />
                                             </div>
 
                                             <div className="pt-2">

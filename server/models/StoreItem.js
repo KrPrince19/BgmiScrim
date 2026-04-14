@@ -7,16 +7,18 @@ const storeItemSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['All', 'Outfits', 'Gun Skins', 'X-Suits', 'UC'],
+    enum: ['All', 'Outfits', 'Gun Skins', 'X-Suits', 'UC', 'Accounts'],
     required: true,
   },
   originalPrice: {
     type: Number,
-    required: true,
+    required: false,
+    default: 0
   },
   price: {
     type: Number,
-    required: true,
+    required: false,
+    default: 0
   },
   discount: {
     type: Number,
@@ -46,6 +48,10 @@ const storeItemSchema = new mongoose.Schema({
   isHidden: {
     type: Boolean,
     default: false,
+  },
+  description: {
+    type: String,
+    required: false,
   },
 }, { timestamps: true });
 
