@@ -1,9 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { Gamepad, Send, Camera, Play, MessageCircle, Mail, MapPin } from "lucide-react";
+import { Gamepad, Play, MessageCircle, MapPin, Download } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Footer() {
+    const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+    const [isInstallable, setIsInstallable] = useState(false);
+
+    useEffect(() => {
+        const handleBeforeInstallPrompt = (e: any) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+            setIsInstallable(true);
+        };
+
+        window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+        return () => {
+            window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+        };
+    }, []);
+
+    const handleInstallClick = async () => {
+        if (!deferredPrompt) return;
+
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        
+        if (outcome === "accepted") {
+            setDeferredPrompt(null);
+            setIsInstallable(false);
+        }
+    };
+
     return (
         <footer className="relative bg-black border-t border-white/5 pt-20 pb-10 px-6 overflow-hidden">
             {/* Background Glow */}
@@ -22,7 +52,8 @@ export default function Footer() {
                         <p className="text-zinc-500 max-w-sm text-sm leading-relaxed font-medium">
                             The ultimate destination for competitive BGMI players. Real-time slots, verified payments, and professional tournament-grade scrims every day.
                         </p>
-                        <div className="flex items-center gap-4">
+                        
+                        <div className="flex flex-wrap items-center gap-4">
                             <SocialLink
                                 href="https://chat.whatsapp.com/E0Xvkc1PdSFCUZFyjJX4Ep?mode=gi_t"
                                 icon={<MessageCircle className="h-5 w-5" />}
@@ -33,6 +64,16 @@ export default function Footer() {
                                 icon={<Play className="h-5 w-5" />}
                                 colorClass="text-red-500"
                             />
+                            
+                            {isInstallable && (
+                                <button
+                                    onClick={handleInstallClick}
+                                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-blue-600/20"
+                                >
+                                    <Download className="h-4 w-4" />
+                                    Install App
+                                </button>
+                            )}
                         </div>
                     </div>
 
