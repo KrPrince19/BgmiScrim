@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { SocketProvider } from "@/context/SocketContext";
 import Footer from "@/components/Footer";
+import InstallModal from "@/components/InstallModal";
 
 export const metadata: Metadata = {
   title: "FragZone | Premium BGMI Scrims",
@@ -41,6 +42,7 @@ export default function RootLayout({
           <SocketProvider>
             {children}
             <Footer />
+            <InstallModal />
           </SocketProvider>
         </AuthProvider>
       </body>
