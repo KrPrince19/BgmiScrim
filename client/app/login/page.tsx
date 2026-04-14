@@ -28,7 +28,11 @@ export default function LoginPage() {
       const { data } = await api.post("/auth/login", formData);
       setAuth(data);
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed");
+      if (!err.response) {
+        setError("Connection error: Cannot reach the backend server. If you are on Vercel, check your API URL and CORS settings.");
+      } else {
+        setError(err.response?.data?.message || "Login failed");
+      }
     } finally {
       setLoading(false);
     }

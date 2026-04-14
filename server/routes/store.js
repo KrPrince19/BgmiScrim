@@ -90,6 +90,53 @@ router.post('/', protect, admin, upload.single('image'), async (req, res) => {
     }
 });
 
+// PUT /api/store/:id : Update a store item
+router.put('/:id', protect, admin, upload.single('image'), async (req, res) => {
+    try {
+        const item = await StoreItem.findById(req.params.id);
+        if (!item) return res.status(404).json({ message: "Item not found" });
+
+        const { name, category, originalPrice, price, discount, rating, rarity, isDealOfDay, description } = req.body;
+
+        // Update fields if they exist in request body
+        if (name) item.name = name;
+        if (category) item.category = category;
+        if (originalPrice !== undefined) item.originalPrice = Number(originalPrice);
+        if (price !== undefined) item.price = Number(price);
+        if (discount !== undefined) item.discount = Number(discount);
+        if (rating !== undefined) item.rating = Number(rating);
+        if (rarity) item.rarity = rarity;
+        if (description !== undefined) item.description = description;
+        if (isDealOfDay !== undefined) item.isDealOfDay = isDealOfDay === 'true';
+
+        // Update image if a new one is uploaded
+        if (req.file) {
+            // Delete old image
+            if (item.imageUrl) {
+                const oldPath = path.join(__dirname, '..', item.imageUrl);
+                if (fs.existsSync(oldPath)) {
+                    fs.unlinkSync(oldPath);
+                }
+            }
+            item.imageUrl = `/uploads/${req.file.filename}`;
+        }
+
+        await item.save();
+
+        // Ensure only one deal of the day exists if this one is true
+        if (item.isDealOfDay) {
+            await StoreItem.updateMany({ _id: { $ne: item._id } }, { isDealOfDay: false });
+        }
+
+        // Emit real-time update
+        req.io.emit('storeUpdate', { action: 'update', item });
+
+        res.json(item);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 // PUT /api/store/:id/stock : Toggle Out Of Stock
 router.put('/:id/stock', protect, admin, async (req, res) => {
     try {

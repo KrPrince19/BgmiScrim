@@ -15,8 +15,16 @@ export default function InstallModal() {
       e.preventDefault();
       // Stash the event so it can be triggered later.
       setDeferredPrompt(e);
-      // Show the modal
-      setShowModal(true);
+      
+      // Check if we should show the modal today
+      const lastShown = localStorage.getItem("lastInstallPromptDate");
+      const now = new Date().getTime();
+      const oneDay = 24 * 60 * 60 * 1000;
+
+      if (!lastShown || now - parseInt(lastShown) > oneDay) {
+        setShowModal(true);
+        localStorage.setItem("lastInstallPromptDate", now.toString());
+      }
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);

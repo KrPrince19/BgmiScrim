@@ -18,7 +18,13 @@ const server = require('http').createServer(app);
 // CORS - only allow requests from our frontend apps
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
-  : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173'];
+  : [
+      'http://localhost:3000', 
+      'http://localhost:3001', 
+      'http://localhost:5173',
+      'https://bgmi-scrim.vercel.app',
+      'https://bgmi-scrim-admin.vercel.app'
+    ];
 
 app.use(cors({
   origin: (origin, callback) => {

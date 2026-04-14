@@ -7,7 +7,7 @@ import { useSocket } from "@/context/SocketContext";
 import Sidebar from "@/components/Sidebar";
 import MobileHeader from "@/components/MobileHeader";
 import {
-    Loader2, Plus, Trash2, X, Check, Image as ImageIcon, ShoppingBag, EyeOff, Eye, PackageX, PackageCheck
+    Loader2, Plus, Trash2, X, Check, Image as ImageIcon, ShoppingBag, EyeOff, Eye, PackageX, PackageCheck, Edit2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -22,6 +22,7 @@ export default function StoreManagePage() {
 
     const [form, setForm] = useState(emptyForm);
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [editingItem, setEditingItem] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -63,6 +64,24 @@ export default function StoreManagePage() {
     const openCreate = () => {
         setForm(emptyForm);
         setImageFile(null);
+        setEditingItem(null);
+        setError("");
+        setShowModal(true);
+    };
+
+    const openEdit = (item: any) => {
+        setForm({
+            name: item.name,
+            category: item.category,
+            originalPrice: String(item.originalPrice),
+            price: String(item.price),
+            discount: String(item.discount),
+            rarity: item.rarity,
+            isDealOfDay: item.isDealOfDay,
+            description: item.description || ""
+        });
+        setImageFile(null);
+        setEditingItem(item._id);
         setError("");
         setShowModal(true);
     };
@@ -100,7 +119,7 @@ export default function StoreManagePage() {
         setSaving(true);
         setError("");
 
-        if (!imageFile) {
+        if (!imageFile && !editingItem) {
             setError("Please upload an image for the item");
             setSaving(false);
             return;
@@ -116,11 +135,18 @@ export default function StoreManagePage() {
             formData.append("rarity", form.rarity);
             formData.append("isDealOfDay", String(form.isDealOfDay));
             formData.append("description", form.description || "");
-            formData.append("image", imageFile);
+            if (imageFile) formData.append("image", imageFile);
 
-            await api.post("/store", formData, {
-                headers: { "Content-Type": "multipart/form-data" }
-            });
+            if (editingItem) {
+                await api.put(`/store/${editingItem}`, formData, {
+                    headers: { "Content-Type": "multipart/form-data" }
+                });
+            } else {
+                await api.post("/store", formData, {
+                    headers: { "Content-Type": "multipart/form-data" }
+                });
+            }
+            
             setShowModal(false);
             fetchItems();
         } catch (err: any) {
@@ -217,24 +243,32 @@ export default function StoreManagePage() {
                                                 </div>
                                             </div>
 
-                                            <div className="mt-auto pt-4 grid grid-cols-3 gap-2">
+                                            <div className="mt-auto pt-4 flex gap-2">
                                                 <button
                                                     onClick={() => toggleHide(item._id)}
-                                                    className={`py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-1 transition-all ${item.isHidden ? 'bg-blue-600 hover:bg-blue-500 text-white' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-400'}`}
+                                                    className={`h-10 px-3 rounded-lg font-bold text-xs flex items-center justify-center gap-1 transition-all flex-1 ${item.isHidden ? 'bg-blue-600 hover:bg-blue-500 text-white' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-400'}`}
+                                                    title={item.isHidden ? 'Show' : 'Hide'}
                                                 >
-                                                    {item.isHidden ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
-                                                    {item.isHidden ? 'Show' : 'Hide'}
+                                                    {item.isHidden ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
                                                 </button>
                                                 <button
                                                     onClick={() => toggleStock(item._id)}
-                                                    className={`py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-1 transition-all ${item.isOutOfStock ? 'bg-amber-600 hover:bg-amber-500 text-white' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-400'}`}
+                                                    className={`h-10 px-3 rounded-lg font-bold text-xs flex items-center justify-center gap-1 transition-all flex-1 ${item.isOutOfStock ? 'bg-amber-600 hover:bg-amber-500 text-white' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-400'}`}
+                                                    title={item.isOutOfStock ? 'In Stock' : 'Out Stock'}
                                                 >
-                                                    {item.isOutOfStock ? <PackageCheck className="h-3 w-3" /> :  <PackageX className="h-3 w-3" />}
-                                                    {item.isOutOfStock ? 'In Stock' : 'Out Stock'}
+                                                    {item.isOutOfStock ? <PackageCheck className="h-4 w-4" /> :  <PackageX className="h-4 w-4" />}
+                                                </button>
+                                                <button
+                                                    onClick={() => openEdit(item)}
+                                                    className="h-10 px-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded-lg font-bold flex items-center justify-center transition-all flex-1"
+                                                    title="Edit Item"
+                                                >
+                                                    <Edit2 className="h-4 w-4" />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(item._id)}
-                                                    className="py-2 bg-red-600/10 hover:bg-red-600/20 text-red-500 rounded-lg font-bold text-xs flex items-center justify-center transition-all"
+                                                    className="h-10 px-3 bg-red-600/10 hover:bg-red-600/20 text-red-500 rounded-lg font-bold flex items-center justify-center transition-all flex-1"
+                                                    title="Delete Item"
                                                 >
                                                     <Trash2 className="h-4 w-4" />
                                                 </button>
@@ -257,7 +291,7 @@ export default function StoreManagePage() {
                                     >
                                         <div className="flex items-center justify-between mb-6">
                                             <h2 className="text-2xl font-black uppercase tracking-tighter italic text-white flex items-center gap-2">
-                                                <ShoppingBag className="text-red-500" /> New Item
+                                                <ShoppingBag className="text-red-500" /> {editingItem ? 'Edit' : 'New'} Item
                                             </h2>
                                             <button onClick={() => setShowModal(false)}><X className="h-5 w-5 text-zinc-400 hover:text-white" /></button>
                                         </div>
@@ -378,7 +412,7 @@ export default function StoreManagePage() {
                                             </div>
 
                                             <button type="submit" disabled={saving} className="w-full py-4 bg-red-600 hover:bg-red-500 rounded-xl font-black flex items-center justify-center gap-2 transition-all mt-4 shadow-lg shadow-red-600/20 text-white">
-                                                {saving ? <Loader2 className="animate-spin h-5 w-5" /> : <><Check className="h-5 w-5" /> Publish to Store</>}
+                                                {saving ? <Loader2 className="animate-spin h-5 w-5" /> : <><Check className="h-5 w-5" /> {editingItem ? 'Update Item' : 'Publish to Store'}</>}
                                             </button>
                                         </form>
                                     </motion.div>
