@@ -237,9 +237,9 @@ export default function StoreManagePage() {
                                                 </div>
                                                 <div className="text-right">
                                                     <div className="text-emerald-400 font-black">
-                                                        {item.price > 0 ? `${item.price} UC` : "DM to buy"}
+                                                        {item.price > 0 ? `₹${item.price}` : "DM to buy"}
                                                     </div>
-                                                    {item.discount > 0 && item.price > 0 && <div className="text-zinc-500 text-xs line-through">{item.originalPrice} UC</div>}
+                                                    {item.discount > 0 && item.price > 0 && <div className="text-zinc-500 text-xs line-through">₹{item.originalPrice}</div>}
                                                 </div>
                                             </div>
 
@@ -342,7 +342,7 @@ export default function StoreManagePage() {
 
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">Original Price (UC)</label>
+                                                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">Original Price (₹)</label>
                                                     <input
                                                         type="number" placeholder="1000 (0 for DM to buy)" min="0"
                                                         className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-red-500 font-bold"
@@ -350,7 +350,7 @@ export default function StoreManagePage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">Selling Price (UC)</label>
+                                                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">Selling Price (₹)</label>
                                                     <input
                                                         type="number" placeholder="800 (0 for DM to buy)" min="0"
                                                         className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-red-500 font-bold"

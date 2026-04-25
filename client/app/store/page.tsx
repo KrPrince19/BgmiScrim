@@ -311,9 +311,9 @@ export default function StorePage() {
                 
                 <div className="flex items-end gap-3">
                   <span className="text-4xl font-bold">
-                    {dealOfDay.price > 0 ? `${dealOfDay.price} UC` : "DM to buy"}
+                    {dealOfDay.price > 0 ? `₹${dealOfDay.price}` : "DM to buy"}
                   </span>
-                  {dealOfDay.discount > 0 && dealOfDay.price > 0 && <span className="text-xl text-zinc-500 line-through mb-1">{dealOfDay.originalPrice} UC</span>}
+                  {dealOfDay.discount > 0 && dealOfDay.price > 0 && <span className="text-xl text-zinc-500 line-through mb-1">₹{dealOfDay.originalPrice}</span>}
                   {dealOfDay.discount > 0 && dealOfDay.price > 0 && <span className="text-sm font-semibold text-emerald-400 mb-1.5 ml-2 bg-emerald-500/10 px-2 py-0.5 rounded">{dealOfDay.discount}% OFF</span>}
                 </div>
                 
@@ -475,10 +475,10 @@ export default function StorePage() {
                         <div className="mt-auto flex items-end justify-between">
                           <div>
                             {item.discount > 0 && item.price > 0 && (
-                              <p className="text-sm text-zinc-500 line-through">{item.originalPrice} UC</p>
+                              <p className="text-sm text-zinc-500 line-through">₹{item.originalPrice}</p>
                             )}
                             <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-emerald-200">
-                              {item.price > 0 ? `${item.price} UC` : "DM to buy"}
+                              {item.price > 0 ? `₹${item.price}` : "DM to buy"}
                             </p>
                           </div>
                           
@@ -610,7 +610,7 @@ export default function StorePage() {
                           
                           <div className="p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl">
                              <p className="text-[10px] text-blue-500 uppercase font-black tracking-widest mb-0.5">Amount to Pay</p>
-                             <div className="text-2xl font-black">{selectedItem.price} UC</div>
+                             <div className="text-2xl font-black">₹{selectedItem.price}</div>
                           </div>
                        </div>
                     </div>
@@ -701,7 +701,7 @@ export default function StorePage() {
                 <div className="absolute bottom-8 left-8 right-8 z-20">
                    <h2 className="text-2xl font-black text-white leading-tight mb-2">{selectedAccount.name}</h2>
                    <div className="text-3xl font-black text-emerald-400">
-                      {selectedAccount.price > 0 ? `${selectedAccount.price} UC` : "DM to buy"}
+                      {selectedAccount.price > 0 ? `₹${selectedAccount.price}` : "DM to buy"}
                    </div>
                 </div>
               </div>
