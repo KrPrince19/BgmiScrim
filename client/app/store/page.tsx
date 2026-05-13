@@ -11,6 +11,7 @@ import {
   Zap, 
   Tag,
   Search,
+  ArrowRight,
   TrendingUp,
   PackageX,
   QrCode,
@@ -397,23 +398,17 @@ export default function StorePage() {
         ) : (
             <motion.div 
               layout
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+              className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6"
             >
               <AnimatePresence>
                 {filteredItems.map((item) => {
                   const isMythic = item.rarity === 'Mythic';
                   const isLegendary = item.rarity === 'Legendary';
-                  const isEpic = item.rarity === 'Epic';
                   
-                  const rarityBadgeClasses = isMythic ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 
-                                            isLegendary ? 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30' : 
-                                            isEpic ? 'bg-purple-500/20 text-purple-300 border-purple-500/30' : 
-                                            'bg-blue-500/20 text-blue-300 border-blue-500/30';
-
-                  const glowClasses = isMythic ? 'from-amber-400 to-orange-600' :
-                                      isLegendary ? 'from-fuchsia-500 to-purple-600' :
-                                      isEpic ? 'from-purple-400 to-pink-500' :
-                                      'from-blue-400 to-cyan-500';
+                  const RarityIcon = item.category === "Outfits" ? Flame : 
+                                    item.category === "Gun Skins" ? Crosshair : 
+                                    item.category === "X-Suits" ? Star : 
+                                    item.category === "UC" ? Zap : ShieldCheck;
 
                   return (
                     <motion.div
@@ -423,95 +418,82 @@ export default function StorePage() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.2 }}
-                      className="group relative flex flex-col premium-card overflow-hidden"
+                      className="group relative flex flex-col bg-[#111827] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-white/5 hover:border-blue-500/30 transition-all duration-300 shadow-2xl"
                     >
-                      {/* Item Image */}
-                      <div className="relative aspect-square overflow-hidden bg-zinc-950 flex items-center justify-center p-6">
-                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent z-10 pointer-events-none"></div>
+                      {/* Item Image Section */}
+                      <div className="relative aspect-[4/5] overflow-hidden bg-[#0a0f1a] flex items-center justify-center">
+                        <img 
+                          src={`${SERVER_URL}${item.imageUrl}`} 
+                          alt={item.name} 
+                          className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${item.isOutOfStock ? 'grayscale opacity-50' : ''}`}
+                        />
                         
+                        {/* Overlay Gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#111827] via-transparent to-transparent opacity-90" />
+
+                        {/* Floating Icon */}
+                        <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 z-20">
+                          <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-lg transform -rotate-12 group-hover:rotate-0 transition-transform duration-300">
+                             <RarityIcon className={`w-4 h-4 md:w-5 md:h-5 ${isMythic ? 'text-amber-400' : isLegendary ? 'text-fuchsia-400' : 'text-blue-400'}`} />
+                          </div>
+                        </div>
+
                         {/* Discount Badge */}
                         {item.discount > 0 && (
-                          <div className="absolute top-4 left-4 z-20 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-lg flex items-center gap-1">
-                            <Tag className="w-3 h-3" />
+                          <div className="absolute top-3 left-3 md:top-4 md:left-4 z-20 bg-red-500 text-white text-[8px] md:text-[10px] font-black px-1.5 md:px-2 py-0.5 md:py-1 rounded-lg shadow-lg flex items-center gap-1 uppercase tracking-tighter">
                             {item.discount}% OFF
                           </div>
                         )}
-                        
-                        {/* Rarity Badge */}
-                        <div className={`absolute top-4 right-4 z-20 text-xs font-bold px-2.5 py-1 rounded-md shadow-lg border backdrop-blur-md bg-opacity-20 ${rarityBadgeClasses}`}>
-                          {item.rarity}
-                        </div>
-
-                        {/* Animated glowing background */}
-                        <div className={`w-32 h-32 rounded-full absolute bg-gradient-to-tr ${glowClasses} blur-[60px] opacity-30 group-hover:opacity-50 transition-opacity duration-500`}></div>
-                        
-                        {/* Center Image */}
-                        <div className="relative z-10 w-full h-full flex items-center justify-center transform transition-transform duration-500 group-hover:scale-105">
-                           <img 
-                              src={`${SERVER_URL}${item.imageUrl}`} 
-                              alt={item.name} 
-                              className={`max-w-full max-h-full object-contain drop-shadow-2xl ${item.isOutOfStock ? 'grayscale opacity-70' : ''}`}
-                           />
-                        </div>
 
                         {item.isOutOfStock && (
-                            <div className="absolute inset-0 bg-black/50 z-20 flex flex-col items-center justify-center backdrop-blur-[2px]">
-                                <PackageX className="w-8 h-8 text-zinc-400 mb-2" />
-                                <span className="uppercase text-xs font-black tracking-widest text-zinc-300">Out of Stock</span>
+                            <div className="absolute inset-0 bg-black/60 z-30 flex flex-col items-center justify-center backdrop-blur-[2px]">
+                                <PackageX className="w-6 h-6 md:w-8 md:h-8 text-zinc-400 mb-2" />
+                                <span className="uppercase text-[8px] md:text-[10px] font-black tracking-widest text-zinc-300">Out of Stock</span>
                             </div>
                         )}
                       </div>
 
                       {/* Item Details */}
-                      <div className="p-5 flex flex-col flex-grow">
-                        <p className="text-xs text-zinc-500 font-medium mb-1 uppercase tracking-wider">{item.category}</p>
-                        <h3 className="text-lg font-bold text-zinc-100 mb-2 line-clamp-1">{item.name}</h3>
+                      <div className="p-3 md:p-5 bg-[#111827] flex flex-col gap-0.5 md:gap-1 relative">
+                        <h3 className="text-[11px] md:text-base font-bold text-white line-clamp-1 group-hover:text-blue-400 transition-colors uppercase tracking-tight">{item.name}</h3>
+                        <p className="text-[9px] md:text-xs text-zinc-500 font-medium uppercase tracking-widest">
+                          {item.category === "UC" ? `${item.price} UC` : `1 ${item.category}`}
+                        </p>
                         
-                        <div className="flex items-center gap-1 mb-4">
-                          <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
-                          <span className="text-sm text-zinc-300 font-medium">{item.rating}</span>
-                        </div>
+                        <div className="flex items-center justify-between mt-2 md:mt-3">
+                           <div className="flex flex-col">
+                              {item.discount > 0 && (
+                                <span className="text-[8px] md:text-[10px] text-zinc-600 line-through">₹{item.originalPrice}</span>
+                              )}
+                              <span className="text-xs md:text-lg font-black text-white">
+                                {item.price > 0 ? `₹${item.price}` : "DM to Buy"}
+                              </span>
+                           </div>
 
-                        <div className="mt-auto flex items-end justify-between">
-                          <div>
-                            {item.discount > 0 && item.price > 0 && (
-                              <p className="text-sm text-zinc-500 line-through">₹{item.originalPrice}</p>
-                            )}
-                            <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-emerald-200">
-                              {item.price > 0 ? `₹${item.price}` : "DM to buy"}
-                            </p>
-                          </div>
-                          
-                          <div className="flex flex-col gap-2">
-                            {item.description && (
-                              <button 
-                                onClick={() => setSelectedAccount(item)}
-                                className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs font-bold transition-all border border-blue-500/20"
-                              >
-                                <Info className="w-3.5 h-3.5" /> View Stats
-                              </button>
-                            )}
-                            {item.price > 0 ? (
-                              <button 
-                                onClick={() => openPurchaseModal(item)}
-                                disabled={item.isOutOfStock}
-                                className={`p-3 rounded-xl transition-all duration-300 shadow-md group/btn relative overflow-hidden ${item.isOutOfStock ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-800 hover:bg-blue-600 text-white'}`}
-                              >
-                                {!item.isOutOfStock && <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>}
-                                <ShoppingCart className="w-5 h-5 relative z-10 mx-auto" />
-                              </button>
-                            ) : (
-                              <a 
-                                href="https://wa.me/916205597789"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 rounded-xl transition-all duration-300 flex items-center justify-center border border-emerald-500/20 group/wa"
-                              >
-                                <MessageCircle className="w-5 h-5 group-hover/wa:scale-110 transition-transform" />
-                              </a>
-                            )}
-                          </div>
+                           <button 
+                             onClick={(e) => {
+                               e.stopPropagation();
+                               openPurchaseModal(item);
+                             }}
+                             disabled={item.isOutOfStock}
+                             className={`w-7 h-7 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-300 ${item.isOutOfStock ? 'bg-zinc-800 text-zinc-600' : 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:scale-110'}`}
+                           >
+                             <ArrowRight className="w-3.5 h-3.5 md:w-5 md:h-5" />
+                           </button>
                         </div>
+                        
+                        {/* Hidden Info Button */}
+                        {item.description && (
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedAccount(item);
+                            }}
+                            className="absolute top-2 right-2 md:top-4 md:right-4 opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-white/5 rounded-md hover:bg-white/10"
+                          >
+                            <Info className="w-3 h-3 md:w-4 md:h-4 text-zinc-500" />
+                          </button>
+                        )}
                       </div>
                     </motion.div>
                   );
