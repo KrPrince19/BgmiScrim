@@ -60,60 +60,56 @@ export default function InstallModal() {
   return (
     <AnimatePresence>
       {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative max-w-sm w-full bg-[#18181b] border border-[#27272a] rounded-3xl p-8 shadow-2xl overflow-hidden"
+            className="relative max-w-sm w-full bg-white border border-gray-200 rounded-3xl p-8 shadow-2xl overflow-hidden"
           >
-            {/* Glossy Background Effect */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
-            <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/10 blur-[80px] rounded-full" />
-            
             <button 
               onClick={handleClose}
-              className="absolute top-4 right-4 p-2 text-zinc-500 hover:text-white transition-colors"
+              className="absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-900 transition-colors"
             >
               <X className="h-5 w-5" />
             </button>
 
             <div className="flex flex-col items-center text-center">
               <div className="mb-6 relative">
-                 <div className="w-20 h-20 rounded-2xl bg-blue-600/10 flex items-center justify-center border border-blue-500/20 shadow-inner">
-                    <Gamepad className="h-10 w-10 text-blue-500" />
+                 <div className="w-20 h-20 rounded-2xl bg-blue-50 flex items-center justify-center border border-blue-100 shadow-inner">
+                    <Gamepad className="h-10 w-10 text-blue-600" />
                  </div>
                  {/* Small badge */}
-                 <div className="absolute -bottom-1 -right-1 bg-emerald-500 p-1.5 rounded-full border-2 border-[#18181b]">
+                 <div className="absolute -bottom-1 -right-1 bg-emerald-500 p-1.5 rounded-full border-2 border-white">
                     <div className="bg-white w-1.5 h-1.5 rounded-full animate-pulse" />
                  </div>
               </div>
 
-              <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-2">
+              <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight mb-2">
                 Install FragZone App
               </h2>
-              <p className="text-zinc-500 text-sm font-medium mb-8 leading-relaxed">
+              <p className="text-gray-600 text-sm font-medium mb-8 leading-relaxed">
                 Experience crystal-clear real-time slots and professional scrims with our premium mobile app.
               </p>
 
               <div className="w-full space-y-3">
                 <button
                   onClick={handleInstallClick}
-                  className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-xl shadow-blue-600/20 active:scale-95 flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2"
                 >
                   <Download className="h-4 w-4" />
                   Install Now
                 </button>
                 <button
                   onClick={handleClose}
-                  className="w-full py-4 bg-transparent border border-[#27272a] hover:bg-white/5 text-zinc-400 hover:text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all active:scale-95"
+                  className="w-full py-4 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all active:scale-95"
                 >
                   Maybe Later
                 </button>
               </div>
             </div>
 
-            <p className="mt-8 text-[9px] text-zinc-600 font-black uppercase tracking-widest text-center">
+            <p className="mt-8 text-[9px] text-gray-400 font-black uppercase tracking-widest text-center">
                 Requires very little storage space
             </p>
           </motion.div>

@@ -34,9 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-screen font-sans bg-[#09090b] text-[#fafafa] antialiased">
+      <body className="min-h-screen font-sans bg-gray-50 text-gray-900 antialiased">
         <Toaster position="top-right" toastOptions={{
-          style: { background: '#18181b', color: '#fff', border: '1px solid #27272a' },
+          style: { background: '#ffffff', color: '#111827', border: '1px solid #e5e7eb' },
         }} />
         <AuthProvider>
           <SocketProvider>

@@ -14,8 +14,14 @@ const protect = async (req, res, next) => {
       }
       return next();
     } catch (error) {
-      console.error(`🔐 Auth Failure: Token invalid or expired. Error: ${error.message}`);
-      return res.status(401).json({ message: 'Not authorized, token failed' });
+      if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+        console.error(`🔐 Auth Failure: Token invalid or expired. Error: ${error.message}`);
+        return res.status(401).json({ message: 'Not authorized, token failed' });
+      } else {
+        console.error(`💥 Database/Server Error in auth middleware: ${error.message}`);
+        // Return 500 for DB errors so the client doesn't treat it as an expired session
+        return res.status(500).json({ message: 'Server error during authentication' });
+      }
     }
   }
 

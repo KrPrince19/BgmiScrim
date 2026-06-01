@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #09090b;
-  --color-foreground: #fafafa;
-  --color-card: #18181b;
-  --color-border: #27272a;
+  --color-background: #f9fafb;
+  --color-foreground: #111827;
+  --color-card: #ffffff;
+  --color-border: #e5e7eb;
   --color-primary: #3b82f6;
   --radius-xl: 0.75rem;
 }
 
 body {
-  background-color: #09090b;
-  color: #fafafa;
+  background-color: #f9fafb;
+  color: #111827;
 }
 
 input[type="password"]::-ms-reveal,
@@ -20,17 +20,16 @@ input[type="password"]::-ms-clear {
 }
 
 @utility glass-morphism {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
 }
 
 @utility gradient-text {
-  @apply bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent;
+  @apply text-blue-600 font-bold;
 }
 
 @utility premium-card {
-  @apply bg-zinc-900 border border-zinc-800 rounded-xl transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-800/80;
+  @apply bg-white border border-gray-200 rounded-xl transition-all duration-200 hover:border-blue-500 hover:shadow-sm;
 }
 
 @utility custom-scrollbar {
@@ -38,14 +37,13 @@ input[type="password"]::-ms-clear {
     width: 6px;
   }
   &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
+    background: transparent;
   }
   &::-webkit-scrollbar-thumb {
-    background: #4b5563;
+    background: #d1d5db;
     border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   &::-webkit-scrollbar-thumb:hover {
-    background: #6b7280;
+    background: #9ca3af;
   }
 }

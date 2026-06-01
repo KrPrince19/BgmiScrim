@@ -35,15 +35,15 @@ export default function StatusPage() {
   }, [id]);
 
   if (loading) return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
-      <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <Loader2 className="h-10 w-10 text-blue-600 animate-spin" />
     </div>
   );
 
   const statusColors = {
-    pending: "text-amber-500 bg-amber-500/10 border-amber-500/20",
-    approved: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
-    rejected: "text-red-500 bg-red-500/10 border-red-500/20"
+    pending: "text-amber-600 bg-amber-50 border-amber-100 shadow-sm px-3 py-1 rounded-full text-sm",
+    approved: "text-emerald-600 bg-emerald-50 border-emerald-100 shadow-sm px-3 py-1 rounded-full text-sm",
+    rejected: "text-red-600 bg-red-50 border-red-100 shadow-sm px-3 py-1 rounded-full text-sm"
   };
 
   const statusIcons = {
@@ -53,9 +53,9 @@ export default function StatusPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-white text-gray-900">
        <nav className="p-6">
-        <Link href="/dashboard" className="inline-flex items-center gap-2 text-zinc-500 hover:text-white transition-colors">
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-bold text-sm">
           <ChevronLeft className="h-5 w-5" /> Back to Dashboard
         </Link>
       </nav>
@@ -64,31 +64,31 @@ export default function StatusPage() {
         <motion.div
            initial={{ opacity: 0, scale: 0.9 }}
            animate={{ opacity: 1, scale: 1 }}
-           className="glass-morphism rounded-3xl p-10 border border-white/5"
+           className="bg-white rounded-3xl p-10 border border-gray-200 shadow-sm"
         >
           <div className="flex justify-center mb-6">
              {statusIcons[payment?.status as keyof typeof statusIcons]}
           </div>
 
-          <h1 className="text-3xl font-black mb-4 uppercase tracking-tight">
-            Status: <span className={statusColors[payment?.status as keyof typeof statusColors].split(' ')[0]}>
+          <h1 className="text-3xl font-black mb-4 uppercase tracking-tight flex items-center justify-center gap-3">
+            Status: <span className={statusColors[payment?.status as keyof typeof statusColors]}>
               {payment?.status}
             </span>
           </h1>
 
-          <div className="p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl mb-8">
-             <p className="text-zinc-400 text-sm mb-1 uppercase tracking-widest font-black">Transaction ID</p>
-             <p className="font-mono text-blue-400">{payment?.transactionID}</p>
+          <div className="p-4 bg-gray-50 border border-gray-200 rounded-2xl mb-8 shadow-inner">
+             <p className="text-gray-500 text-sm mb-1 uppercase tracking-widest font-black">Transaction ID</p>
+             <p className="font-mono font-bold text-blue-600">{payment?.transactionID}</p>
           </div>
 
           <div className="space-y-6">
             {payment?.status === 'pending' && (
               <div className="space-y-4">
-                  <p className="text-zinc-500 text-sm leading-relaxed">
+                  <p className="text-gray-600 text-sm leading-relaxed font-medium">
                     Your payment is being manually verified by our administrative team. 
                     This process ensures the integrity of the tournament. Please stay on this page.
                   </p>
-                 <div className="flex items-center justify-center gap-2 text-zinc-600 animate-pulse">
+                 <div className="flex items-center justify-center gap-2 text-gray-400 animate-pulse">
                     <RefreshCw className="h-4 w-4 animate-spin-slow" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Auto-refreshing status</span>
                  </div>
@@ -101,12 +101,12 @@ export default function StatusPage() {
                  animate={{ opacity: 1, y: 0 }}
                  className="space-y-6"
                >
-                  <p className="text-zinc-400 text-sm leading-relaxed">
+                  <p className="text-gray-600 text-sm leading-relaxed font-medium">
                     Great news! Your payment has been verified. You can now access the room details.
                   </p>
                   <Link 
                     href={`/room/${id}`}
-                    className="flex items-center justify-center gap-2 py-4 px-8 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg shadow-emerald-600/20"
+                    className="flex items-center justify-center gap-2 py-4 px-8 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-black uppercase tracking-widest text-sm transition-all transform active:scale-95 shadow-sm"
                   >
                     Get Room Access <Gamepad2 className="h-5 w-5" />
                   </Link>
@@ -115,12 +115,12 @@ export default function StatusPage() {
 
             {payment?.status === 'rejected' && (
               <div className="space-y-4">
-                 <p className="text-red-400/80 text-sm leading-relaxed">
+                 <p className="text-red-500 text-sm leading-relaxed font-bold">
                    Your payment request was rejected. Please contact support via WhatsApp if you believe this is an error.
                  </p>
                  <Link 
                     href={`/payment/${id}`}
-                    className="inline-block text-blue-500 hover:underline text-sm font-bold"
+                    className="inline-block text-blue-600 hover:underline text-sm font-black uppercase tracking-widest mt-2"
                   >
                     Try Again with Correct Transaction ID
                   </Link>
@@ -129,7 +129,7 @@ export default function StatusPage() {
           </div>
         </motion.div>
 
-        <p className="mt-12 text-[10px] text-zinc-600 uppercase tracking-[0.3em] font-black">
+        <p className="mt-12 text-[10px] text-gray-400 uppercase tracking-[0.3em] font-black">
           BGMI SCRIM OFFICIAL VERIFICATION SYSTEM
         </p>
       </main>

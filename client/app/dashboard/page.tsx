@@ -99,33 +99,33 @@ export default function Dashboard() {
 
   if (authLoading || !user || loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pb-12">
+    <div className="min-h-screen bg-gray-50 text-gray-900 pb-12">
       {/* Header */}
-      <nav className="glass-morphism border-b border-white/5 sticky top-0 z-50">
+      <nav className="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Gamepad2 className="h-6 w-6 text-blue-500" />
+            <Gamepad2 className="h-6 w-6 text-blue-600" />
             <span className="text-xl font-bold tracking-tighter">DASHBOARD</span>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex flex-col items-end mr-2">
               <span className="text-sm font-bold">{user?.username}</span>
-              <span className="text-[10px] text-zinc-500 uppercase tracking-widest">{user?.role}</span>
+              <span className="text-[10px] text-gray-500 uppercase tracking-widest">{user?.role}</span>
             </div>
             <button
               onClick={() => router.push("/")}
-              className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 transition-colors"
+              className="p-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm"
               title="Go Back"
             >
-              <Home className="h-5 w-5 text-zinc-400" />
+              <Home className="h-5 w-5 text-gray-600" />
             </button>
           </div>
         </div>
@@ -134,14 +134,14 @@ export default function Dashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 pt-12">
         {sessionError && (
-          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 text-red-500">
+          <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center justify-between gap-4 shadow-sm">
+            <div className="flex items-center gap-3 text-red-600">
               <Zap className="h-5 w-5" />
               <p className="text-sm font-medium">Your session has expired. Please log in again to see your joined matches.</p>
             </div>
             <button 
               onClick={() => { localStorage.removeItem('token'); window.location.reload(); }}
-              className="px-4 py-2 bg-red-500 text-white text-xs font-bold rounded-lg hover:bg-red-600 transition-colors"
+              className="px-4 py-2 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm active:scale-95"
             >
               LOGOUT & RESET
             </button>
@@ -150,16 +150,16 @@ export default function Dashboard() {
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-black tracking-tight mb-2">Available <span className="text-blue-500 underline decoration-blue-500/30">Scrims</span></h1>
-            <p className="text-zinc-500">Pick a match and secure your slot instantly.</p>
+            <h1 className="text-4xl font-black tracking-tight mb-2 text-gray-900">Available <span className="text-blue-600 underline decoration-blue-200">Scrims</span></h1>
+            <p className="text-gray-500">Pick a match and secure your slot instantly.</p>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="premium-card px-6 py-4 flex items-center gap-4">
+            <div className="bg-white border border-gray-200 rounded-xl px-6 py-4 flex items-center gap-4 shadow-sm">
               <Trophy className="h-6 w-6 text-yellow-500" />
               <div>
-                <div className="text-xs uppercase tracking-widest text-zinc-500 font-bold">Total Scrims</div>
-                <div className="text-xl font-black">{scrims.length}</div>
+                <div className="text-xs uppercase tracking-widest text-gray-500 font-bold">Total Scrims</div>
+                <div className="text-xl font-black text-gray-900">{scrims.length}</div>
               </div>
             </div>
           </div>
@@ -176,11 +176,11 @@ export default function Dashboard() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-24 glass-morphism rounded-3xl border-dashed border-2 border-zinc-800"
+            className="text-center py-24 bg-white rounded-3xl border-dashed border-2 border-gray-300 shadow-sm"
           >
-            <Users className="h-12 w-12 text-zinc-700 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-zinc-400">No active scrims available</h3>
-            <p className="text-zinc-600 mt-2">Check back later for upcoming matches.</p>
+            <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-gray-600">No active scrims available</h3>
+            <p className="text-gray-500 mt-2">Check back later for upcoming matches.</p>
           </motion.div>
         )}
       </main>

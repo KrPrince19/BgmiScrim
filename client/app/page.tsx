@@ -41,48 +41,48 @@ export default function LandingPage() {
   }, [socket]);
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-blue-500/30">
+    <div className="min-h-screen bg-white text-gray-900 selection:bg-blue-500/30">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 glass-morphism border-b border-white/5">
+      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="bg-blue-600 p-2 rounded-lg">
               <Gamepad2 className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold tracking-tighter uppercase italic">Frag Zone</span>
+            <span className="text-xl font-bold tracking-tighter uppercase italic text-gray-900">Frag Zone</span>
           </Link>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-tight">
-            <Link href="/store" className="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1">
+            <Link href="/store" className="text-emerald-600 hover:text-emerald-500 transition-colors flex items-center gap-1">
               Store
             </Link>
-            <Link href="/results" className="text-zinc-400 hover:text-white transition-colors">
+            <Link href="/results" className="text-gray-500 hover:text-gray-900 transition-colors">
               Results
             </Link>
-            <Link href="/leaderboard" className="text-zinc-400 hover:text-white transition-colors">
+            <Link href="/leaderboard" className="text-gray-500 hover:text-gray-900 transition-colors">
               Leaderboard
             </Link>
             {user ? (
               <>
-                <Link href="/dashboard" className="text-zinc-400 hover:text-white transition-colors">
+                <Link href="/dashboard" className="text-gray-500 hover:text-gray-900 transition-colors">
                   Dashboard
                 </Link>
                 <Link
                   href="/profile"
-                  className="px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-black hover:bg-blue-500 transition-all transform hover:scale-105 flex items-center gap-2 shadow-lg shadow-blue-600/20"
+                  className="px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-black hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center gap-2 shadow-sm"
                 >
                   <UserIcon className="h-4 w-4" /> Profile
                 </Link>
               </>
             ) : (
               <>
-                <Link href="/login" className="text-zinc-400 hover:text-white transition-colors">
+                <Link href="/login" className="text-gray-500 hover:text-gray-900 transition-colors">
                   Log In
                 </Link>
                 <Link
                   href="/register"
-                  className="px-6 py-3 rounded-full bg-white text-black text-xs font-black hover:bg-zinc-200 transition-all transform hover:scale-105 uppercase tracking-widest"
+                  className="px-6 py-3 rounded-full bg-gray-900 text-white text-xs font-black hover:bg-gray-800 transition-all transform hover:scale-105 uppercase tracking-widest shadow-sm"
                 >
                   Join Now
                 </Link>
@@ -93,7 +93,7 @@ export default function LandingPage() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-zinc-400 hover:text-white transition-colors"
+            className="md:hidden p-2 text-gray-500 hover:text-gray-900 transition-colors"
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -106,33 +106,33 @@ export default function LandingPage() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-zinc-950 border-b border-white/5 overflow-hidden"
+              className="md:hidden bg-white border-b border-gray-200 overflow-hidden shadow-sm"
             >
               <div className="flex flex-col p-6 gap-4 text-sm font-bold uppercase tracking-widest">
-                <Link href="/store" onClick={() => setIsMenuOpen(false)} className="text-emerald-400 hover:text-emerald-300 py-2 border-b border-white/5">
+                <Link href="/store" onClick={() => setIsMenuOpen(false)} className="text-emerald-600 hover:text-emerald-500 py-2 border-b border-gray-100">
                   Store
                 </Link>
-                <Link href="/results" onClick={() => setIsMenuOpen(false)} className="text-zinc-400 hover:text-white py-2 border-b border-white/5">
+                <Link href="/results" onClick={() => setIsMenuOpen(false)} className="text-gray-600 hover:text-gray-900 py-2 border-b border-gray-100">
                   Results
                 </Link>
-                <Link href="/leaderboard" onClick={() => setIsMenuOpen(false)} className="text-zinc-400 hover:text-white py-2 border-b border-white/5">
+                <Link href="/leaderboard" onClick={() => setIsMenuOpen(false)} className="text-gray-600 hover:text-gray-900 py-2 border-b border-gray-100">
                   Leaderboard
                 </Link>
                 {user ? (
                   <>
-                    <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="text-zinc-400 hover:text-white py-2 border-b border-white/5">
+                    <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="text-gray-600 hover:text-gray-900 py-2 border-b border-gray-100">
                       Dashboard
                     </Link>
-                    <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="text-blue-500 py-2 border-b border-white/5">
+                    <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="text-blue-600 py-2 border-b border-gray-100">
                       Profile
                     </Link>
                   </>
                 ) : (
                   <>
-                    <Link href="/login" onClick={() => setIsMenuOpen(false)} className="text-zinc-400 hover:text-white py-2 border-b border-white/5">
+                    <Link href="/login" onClick={() => setIsMenuOpen(false)} className="text-gray-600 hover:text-gray-900 py-2 border-b border-gray-100">
                       Log In
                     </Link>
-                    <Link href="/register" onClick={() => setIsMenuOpen(false)} className="text-white bg-blue-600 px-4 py-3 rounded-xl text-center mt-2">
+                    <Link href="/register" onClick={() => setIsMenuOpen(false)} className="text-white bg-blue-600 px-4 py-3 rounded-xl text-center mt-2 shadow-sm">
                       Join Now
                     </Link>
                   </>
@@ -145,7 +145,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-blue-600/10 blur-[120px] rounded-full" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-blue-50 blur-[120px] rounded-full" />
 
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <motion.a
@@ -153,7 +153,7 @@ export default function LandingPage() {
             target="_blank"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-600/30 bg-red-600/5 text-sm font-medium text-red-500 mb-8 hover:bg-red-600/10 transition-colors shadow-lg shadow-red-600/5 cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-200 bg-red-50 text-sm font-medium text-red-600 mb-8 hover:bg-red-100 transition-colors shadow-sm cursor-pointer"
           >
             <Play className="h-3 w-3 fill-current" />
             <span>Watch last match on YouTube</span>
@@ -163,7 +163,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-6xl md:text-8xl font-black tracking-tighter mb-8 bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent"
+            className="text-6xl md:text-8xl font-black tracking-tighter mb-8 bg-gradient-to-b from-gray-900 to-gray-600 bg-clip-text text-transparent"
           >
             DOMINATE THE <br />ARENA.
           </motion.h1>
@@ -172,7 +172,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-12 leading-relaxed"
+            className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed"
           >
             Premium BGMI Scrims with real-time slots, verified payments, and instant access. Join the elite.
           </motion.p>
@@ -185,14 +185,14 @@ export default function LandingPage() {
           >
             <Link
               href={user ? "/dashboard" : "/register"}
-              className="w-full sm:w-auto px-8 py-4 bg-blue-600 rounded-2xl font-bold text-lg hover:bg-blue-500 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20"
+              className="w-full sm:w-auto px-8 py-4 bg-blue-600 rounded-2xl font-bold text-lg text-white hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-md active:scale-95"
             >
               Explore Matches <ChevronRight className="h-5 w-5" />
             </Link>
             <Link
               href="https://chat.whatsapp.com/GMlsUSOnnLQFQfuujlD0G0?mode=gi_t"
               target="_blank"
-              className="w-full sm:w-auto px-8 py-4 bg-zinc-900 border border-zinc-800 rounded-2xl font-bold text-lg hover:border-emerald-500/30 hover:text-emerald-400 transition-all text-center flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 bg-white border border-gray-300 rounded-2xl font-bold text-lg text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 transition-all text-center flex items-center justify-center gap-2 shadow-sm active:scale-95"
             >
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Join Community
@@ -204,17 +204,17 @@ export default function LandingPage() {
       {/* Features */}
       <section className="py-24 px-6 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         <FeatureCard
-          icon={<Zap className="h-6 w-6 text-yellow-400" />}
+          icon={<Zap className="h-6 w-6 text-yellow-500" />}
           title="Instant Access"
           description="Get Room ID and Password instantly once your payment is approved."
         />
         <FeatureCard
-          icon={<Shield className="h-6 w-6 text-emerald-400" />}
+          icon={<Shield className="h-6 w-6 text-emerald-500" />}
           title="Verified Scrims"
           description="Every match is manually verified by our admin team for a fair experience."
         />
         <FeatureCard
-          icon={<Trophy className="h-6 w-6 text-blue-400" />}
+          icon={<Trophy className="h-6 w-6 text-blue-500" />}
           title="Pro Standards"
           description="Tournament-grade settings and competitive player base."
         />
@@ -223,8 +223,8 @@ export default function LandingPage() {
       {/* How it Works Section */}
       <section className="py-24 px-6 max-w-5xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-black mb-4">HOW IT WORKS</h2>
-          <p className="text-zinc-500 font-medium">3 simple steps to enter the battlefield.</p>
+          <h2 className="text-4xl font-black text-gray-900 mb-4">HOW IT WORKS</h2>
+          <p className="text-gray-500 font-medium">3 simple steps to enter the battlefield.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -251,12 +251,12 @@ export default function LandingPage() {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
   return (
-    <div className="p-8 rounded-3xl bg-zinc-900/50 border border-white/5 hover:border-blue-500/20 transition-all group">
-      <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:bg-blue-600/10 transition-colors">
+    <div className="p-8 rounded-3xl bg-gray-50 border border-gray-200 hover:border-blue-300 transition-all group shadow-sm">
+      <div className="w-12 h-12 rounded-2xl bg-white border border-gray-200 flex items-center justify-center mb-6 group-hover:bg-blue-50 transition-colors">
         {icon}
       </div>
-      <h3 className="text-xl font-bold mb-4">{title}</h3>
-      <p className="text-zinc-400 leading-relaxed">{description}</p>
+      <h3 className="text-xl font-bold text-gray-900 mb-4">{title}</h3>
+      <p className="text-gray-600 leading-relaxed">{description}</p>
     </div>
   );
 }
@@ -264,10 +264,10 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
 function StepCard({ number, title, description }: { number: string, title: string, description: string }) {
   return (
     <div className="relative group">
-      <div className="text-8xl font-black text-white/[0.03] absolute -top-10 -left-4 group-hover:text-blue-600/[0.05] transition-colors">{number}</div>
+      <div className="text-8xl font-black text-gray-900/[0.03] absolute -top-10 -left-4 group-hover:text-blue-600/[0.05] transition-colors">{number}</div>
       <div className="relative z-10">
-        <h3 className="text-2xl font-black mb-4 tracking-tight">{title}</h3>
-        <p className="text-zinc-500 leading-relaxed text-sm font-medium">{description}</p>
+        <h3 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">{title}</h3>
+        <p className="text-gray-600 leading-relaxed text-sm font-medium">{description}</p>
       </div>
     </div>
   );
