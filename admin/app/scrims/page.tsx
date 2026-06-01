@@ -294,9 +294,9 @@ export default function ScrimsPage() {
                                     </div>
                                 ))}
 
-                                <div className="flex items-center gap-3 p-3 bg-red-600/10 border border-red-500/20 rounded-xl cursor-pointer" onClick={() => setForm({ ...form, entryFee: form.entryFee === 0 || form.entryFee === "0" ? "" : "0" })}>
-                                    <div className={`w-5 h-5 rounded flex items-center justify-center border ${form.entryFee === 0 || form.entryFee === "0" ? 'bg-red-600 border-red-600' : 'bg-zinc-900 border-zinc-700'}`}>
-                                        {(form.entryFee === 0 || form.entryFee === "0") && <Check className="h-3 w-3 text-white" />}
+                                <div className="flex items-center gap-3 p-3 bg-red-600/10 border border-red-500/20 rounded-xl cursor-pointer" onClick={() => setForm({ ...form, entryFee: form.entryFee === "0" ? "" : "0" })}>
+                                    <div className={`w-5 h-5 rounded flex items-center justify-center border ${form.entryFee === "0" ? 'bg-red-600 border-red-600' : 'bg-zinc-900 border-zinc-700'}`}>
+                                        {form.entryFee === "0" && <Check className="h-3 w-3 text-white" />}
                                     </div>
                                     <label className="text-xs font-bold text-red-500 uppercase tracking-widest cursor-pointer">
                                         Free Tournament
@@ -304,7 +304,7 @@ export default function ScrimsPage() {
                                 </div>
 
                                 {[
-                                    { key: "entryFee", label: "Entry Fee (₹)", type: "number", placeholder: "0", hidden: form.entryFee === 0 || form.entryFee === "0" },
+                                    { key: "entryFee", label: "Entry Fee (₹)", type: "number", placeholder: "0", hidden: form.entryFee === "0" },
                                     { key: "winningPrize", label: "Winning Prize (₹)", type: "number", placeholder: "0" },
                                     { key: "totalSlots", label: "Total Slots", type: "number", placeholder: "25" },
                                     { key: "roomID", label: "Room ID", type: "text", placeholder: "" },
