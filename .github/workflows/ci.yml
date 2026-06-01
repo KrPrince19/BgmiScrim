@@ -1,0 +1,49 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: |
+          client/package-lock.json
+          admin/package-lock.json
+          server/package-lock.json
+
+    - name: Install Server Dependencies
+      working-directory: ./server
+      run: npm ci || npm install
+
+    - name: Install Client Dependencies
+      working-directory: ./client
+      run: npm ci || npm install
+
+    - name: Install Admin Dependencies
+      working-directory: ./admin
+      run: npm ci || npm install
+
+    - name: Build Client
+      working-directory: ./client
+      run: npm run build
+
+    - name: Build Admin
+      working-directory: ./admin
+      run: npm run build

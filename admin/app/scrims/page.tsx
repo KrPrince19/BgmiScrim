@@ -280,12 +280,36 @@ export default function ScrimsPage() {
                                 {[
                                     { key: "matchName", label: "Match Name", type: "text", placeholder: "e.g. Pro Scrim V1" },
                                     { key: "time", label: "Match Date & Time", type: "datetime-local" },
-                                    { key: "entryFee", label: "Entry Fee (₹)", type: "number", placeholder: "0" },
+                                ].map(({ key, label, type, placeholder }) => (
+                                    <div key={key}>
+                                        <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">{label}</label>
+                                        <input
+                                            type={type}
+                                            placeholder={placeholder}
+                                            required
+                                            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-red-500 transition-all font-bold"
+                                            value={(form as any)[key]}
+                                            onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                                        />
+                                    </div>
+                                ))}
+
+                                <div className="flex items-center gap-3 p-3 bg-red-600/10 border border-red-500/20 rounded-xl cursor-pointer" onClick={() => setForm({ ...form, entryFee: form.entryFee === 0 || form.entryFee === "0" ? "" : 0 })}>
+                                    <div className={`w-5 h-5 rounded flex items-center justify-center border ${form.entryFee === 0 || form.entryFee === "0" ? 'bg-red-600 border-red-600' : 'bg-zinc-900 border-zinc-700'}`}>
+                                        {(form.entryFee === 0 || form.entryFee === "0") && <Check className="h-3 w-3 text-white" />}
+                                    </div>
+                                    <label className="text-xs font-bold text-red-500 uppercase tracking-widest cursor-pointer">
+                                        Free Tournament
+                                    </label>
+                                </div>
+
+                                {[
+                                    { key: "entryFee", label: "Entry Fee (₹)", type: "number", placeholder: "0", hidden: form.entryFee === 0 || form.entryFee === "0" },
                                     { key: "winningPrize", label: "Winning Prize (₹)", type: "number", placeholder: "0" },
                                     { key: "totalSlots", label: "Total Slots", type: "number", placeholder: "25" },
                                     { key: "roomID", label: "Room ID", type: "text", placeholder: "" },
                                     { key: "roomPassword", label: "Room Password", type: "text", placeholder: "" },
-                                ].map(({ key, label, type, placeholder }) => (
+                                ].map(({ key, label, type, placeholder, hidden }) => !hidden && (
                                     <div key={key}>
                                         <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">{label}</label>
                                         <input

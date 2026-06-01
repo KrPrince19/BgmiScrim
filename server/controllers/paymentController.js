@@ -8,16 +8,19 @@ exports.joinScrim = async (req, res) => {
   try {
     const { transactionID, clanName, scrimId, player1, player2, player3, player4 } = req.body;
 
-    if (!transactionID || transactionID.length !== 12) {
-      return res.status(400).json({ message: 'Transaction ID (UTR) must be exactly 12 characters.' });
-    }
-
-    if (!req.file) {
-      return res.status(400).json({ message: 'Payment screenshot is required.' });
-    }
-
     const scrim = await Scrim.findById(scrimId);
     if (!scrim) return res.status(404).json({ message: 'Scrim not found' });
+
+    const isFree = scrim.entryFee === 0;
+
+    if (!isFree) {
+      if (!transactionID || transactionID.length !== 12) {
+        return res.status(400).json({ message: 'Transaction ID (UTR) must be exactly 12 characters.' });
+      }
+      if (!req.file) {
+        return res.status(400).json({ message: 'Payment screenshot is required.' });
+      }
+    }
 
     if (scrim.slotsFilled >= scrim.totalSlots) {
       return res.status(400).json({ message: 'Match is full! No more slots available.' });
@@ -28,22 +31,38 @@ exports.joinScrim = async (req, res) => {
       return res.status(400).json({ message: 'You have already requested to join this scrim' });
     }
 
+    const paymentStatus = isFree ? 'approved' : 'pending';
+
     const payment = await Payment.create({
       user: req.user._id,
       scrim: scrimId,
-      transactionID,
-      screenshot: `/uploads/${req.file.filename}`, // Store relative path
+      transactionID: isFree ? 'FREE_ENTRY00' : transactionID,
+      screenshot: isFree ? '/free.png' : `/uploads/${req.file.filename}`, // Store relative path
       clanName,
       player1,
       player2,
       player3,
-      player4
+      player4,
+      status: paymentStatus,
+      approvalDate: isFree ? new Date() : undefined
     });
+
+    if (isFree) {
+      // Auto-increment slots
+      const updatedScrim = await Scrim.findByIdAndUpdate(
+        scrimId,
+        { $inc: { slotsFilled: 1 } },
+        { new: true }
+      );
+      if (req.io && updatedScrim) {
+        req.io.emit('scrimUpdate', updatedScrim);
+      }
+    }
 
     // Emit Real-time Update for Admin
     if (req.io) {
       req.io.emit('newPayment', {
-        message: `New join request from ${req.user.username}`,
+        message: isFree ? `New free join from ${req.user.username}` : `New join request from ${req.user.username}`,
         scrimName: scrim.matchName
       });
     }

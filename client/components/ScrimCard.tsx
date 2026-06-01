@@ -50,7 +50,7 @@ export default function ScrimCard({ scrim, userPayment }: ScrimProps) {
           </h3>
           <div className="flex items-center gap-2">
             <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border border-blue-200">
-              Entry: ₹{scrim.entryFee}
+              Entry: {scrim.entryFee === 0 ? "FREE" : `₹${scrim.entryFee}`}
             </span>
           </div>
         </div>
