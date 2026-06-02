@@ -92,7 +92,7 @@ export default function ScrimCard({ scrim, userPayment }: ScrimProps) {
           <>
             {userPayment.status === 'pending' && (
               <Link
-                href={`/status/${scrim._id}`}
+                href={`/status?id=${scrim._id}`}
                 className="mt-4 flex items-center justify-center gap-2 w-full py-3 bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-200 rounded-xl font-bold text-sm transition-all"
               >
                 <Clock3 className="h-4 w-4" /> Under Verification
@@ -100,7 +100,7 @@ export default function ScrimCard({ scrim, userPayment }: ScrimProps) {
             )}
             {userPayment.status === 'approved' && (
               <Link
-                href={`/room/${scrim._id}`}
+                href={`/room?id=${scrim._id}`}
                 className="mt-4 flex items-center justify-center gap-2 w-full py-3 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200 rounded-xl font-bold text-sm transition-all"
               >
                 <CheckCircle2 className="h-4 w-4" /> View Room ID
@@ -108,7 +108,7 @@ export default function ScrimCard({ scrim, userPayment }: ScrimProps) {
             )}
             {userPayment.status === 'rejected' && (
               <Link
-                href={`/payment/${scrim._id}`}
+                href={`/payment?id=${scrim._id}`}
                 className="mt-4 flex items-center justify-center gap-2 w-full py-3 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-xl font-bold text-sm transition-all"
               >
                 <XCircle className="h-4 w-4" /> Payment Failed
@@ -124,7 +124,7 @@ export default function ScrimCard({ scrim, userPayment }: ScrimProps) {
           </button>
         ) : (
           <Link
-            href={`/payment/${scrim._id}`}
+            href={`/payment?id=${scrim._id}`}
             className="mt-4 flex items-center justify-center gap-2 w-full py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-xl font-bold text-sm transition-all shadow-sm active:scale-95"
           >
             Join Match <ChevronRight className="h-4 w-4" />

@@ -12,7 +12,7 @@ function TermsContent() {
 
     const handleAccept = () => {
         if (returnTo) {
-            router.push(`/payment/${returnTo}`);
+            router.push(`/payment?id=${returnTo}`);
         } else {
             router.push("/dashboard");
         }
@@ -24,7 +24,7 @@ function TermsContent() {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <button
-                        onClick={() => returnTo ? router.push(`/payment/${returnTo}`) : router.push("/")}
+                        onClick={() => returnTo ? router.push(`/payment?id=${returnTo}`) : router.push("/")}
                         className="inline-flex items-center gap-2 text-zinc-500 hover:text-white transition-colors font-bold"
                     >
                         <ChevronLeft className="h-5 w-5" /> {returnTo ? "Back to Match" : "Back to Home"}

@@ -15,7 +15,6 @@ const navItems = [
     { href: "/payments", label: "Payments", icon: CreditCard },
     { href: "/room", label: "Room Management", icon: DoorOpen },
     { href: "/players", label: "Players", icon: Users },
-    { href: "/store", label: "Store", icon: ShoppingBag },
 ];
 
 interface SidebarProps {

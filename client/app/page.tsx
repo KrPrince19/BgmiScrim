@@ -54,9 +54,6 @@ export default function LandingPage() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-tight">
-            <Link href="/store" className="text-emerald-600 hover:text-emerald-500 transition-colors flex items-center gap-1">
-              Store
-            </Link>
             <Link href="/results" className="text-gray-500 hover:text-gray-900 transition-colors">
               Results
             </Link>
@@ -109,9 +106,6 @@ export default function LandingPage() {
               className="md:hidden bg-white border-b border-gray-200 overflow-hidden shadow-sm"
             >
               <div className="flex flex-col p-6 gap-4 text-sm font-bold uppercase tracking-widest">
-                <Link href="/store" onClick={() => setIsMenuOpen(false)} className="text-emerald-600 hover:text-emerald-500 py-2 border-b border-gray-100">
-                  Store
-                </Link>
                 <Link href="/results" onClick={() => setIsMenuOpen(false)} className="text-gray-600 hover:text-gray-900 py-2 border-b border-gray-100">
                   Results
                 </Link>

@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
-import { User as UserIcon, Mail, Phone, Shield, LogOut, ChevronLeft, Gamepad2, Loader2, Trophy, Clock, CheckCircle2, XCircle, AlertCircle, ShoppingCart, Tag, Search, Copy, QrCode } from "lucide-react";
+import { User as UserIcon, Mail, Phone, Shield, LogOut, ChevronLeft, Gamepad2, Loader2, Trophy, Clock, CheckCircle2, XCircle, AlertCircle, Tag, Search, Copy, QrCode } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -63,7 +63,7 @@ export default function ProfilePage() {
   };
 
   const filteredHistory = history.filter((item) => {
-    const title = item.paymentType === 'store' ? item.itemName : item.scrim?.matchName;
+    const title = item.scrim?.matchName;
     return title?.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
@@ -222,10 +222,9 @@ export default function ProfilePage() {
                   </div>
                 ) : (
                     filteredHistory.map((record, index) => {
-                      const isStore = record.paymentType === 'store';
-                      const title = isStore ? record.itemName : record.scrim?.matchName;
-                      const subtitle = isStore ? record.storeItem?.category : 'Scrim Match';
-                      const timestamp = isStore ? record.createdAt : record.scrim?.time;
+                      const title = record.scrim?.matchName;
+                      const subtitle = 'Scrim Match';
+                      const timestamp = record.scrim?.time;
 
                       return (
                         <motion.div
@@ -237,16 +236,11 @@ export default function ProfilePage() {
                         >
                           <div className="flex items-center gap-4">
                             <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-hover:bg-blue-50 transition-colors">
-                              {isStore ? (
-                                <ShoppingCart className="w-5 h-5 text-gray-500 group-hover:text-blue-600" />
-                              ) : (
                                 <Trophy className="w-5 h-5 text-gray-500 group-hover:text-blue-600" />
-                              )}
                             </div>
                             <div>
                               <div className="flex items-center gap-2">
                                 <p className="font-black text-sm tracking-tight text-gray-900 uppercase">{title}</p>
-                                {isStore && <span className="text-[8px] bg-blue-50 border border-blue-100 text-blue-600 px-1.5 py-0.5 rounded font-black uppercase shadow-sm">Store</span>}
                               </div>
                               <p className="text-[10px] text-gray-500 font-bold mt-0.5 uppercase tracking-widest">
                                 {subtitle} • {new Date(timestamp).toLocaleString('en-IN', {
@@ -276,9 +270,6 @@ export default function ProfilePage() {
                                     <span className="text-[10px] font-mono font-bold text-gray-500 group-hover/utr:text-gray-900 transition-colors">UTR: {record.transactionID}</span>
                                     <Copy className="w-3 h-3 text-gray-400 group-hover/utr:text-blue-600 transition-colors" />
                                 </div>
-                                {isStore && (
-                                    <span className="text-[11px] font-black text-gray-900 bg-gray-100 px-2 py-1 rounded-md border border-gray-200">₹{record.priceAtPurchase}</span>
-                                )}
                             </div>
                           </div>
                         </motion.div>

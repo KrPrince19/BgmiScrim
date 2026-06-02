@@ -6,7 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import Sidebar from "@/components/Sidebar";
 import MobileHeader from "@/components/MobileHeader";
 import {
-    Loader2, CheckCircle2, XCircle, Clock, Filter, User, Banknote, Eye, X, ExternalLink, ImageIcon, ShoppingBag, Trophy
+    Loader2, CheckCircle2, XCircle, Clock, Filter, User, Banknote, Eye, X, ExternalLink, ImageIcon, Trophy
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSocket } from "@/context/SocketContext";
@@ -117,19 +117,11 @@ export default function PaymentsPage() {
                                             <div className={`px-3 py-1 rounded-full text-xs font-black border ${STATUS_COLORS[payment.status]}`}>
                                                 {payment.status.toUpperCase()}
                                             </div>
-                                            {payment.paymentType === 'store' ? (
-                                                <>
-                                                    <ShoppingBag className="h-4 w-4 text-blue-500" />
-                                                    <span className="text-sm font-bold">{payment.storeItem?.name || payment.itemName}</span>
-                                                    <span className="text-xs text-zinc-500">₹{payment.storeItem?.price || payment.priceAtPurchase}</span>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Trophy className="h-4 w-4 text-amber-500" />
-                                                    <span className="text-sm font-bold">{payment.scrim?.matchName}</span>
-                                                    <span className="text-xs text-zinc-500">₹{payment.scrim?.entryFee}</span>
-                                                </>
-                                            )}
+                                            <>
+                                                <Trophy className="h-4 w-4 text-amber-500" />
+                                                <span className="text-sm font-bold">{payment.scrim?.matchName}</span>
+                                                <span className="text-xs text-zinc-500">₹{payment.scrim?.entryFee}</span>
+                                            </>
                                         </div>
 
                                         <div className="flex items-center gap-4 text-sm text-zinc-400 flex-wrap">
@@ -155,23 +147,13 @@ export default function PaymentsPage() {
                                         </div>
 
                                         {/* Team Members List (Only for Scrims) */}
-                                        {payment.paymentType !== 'store' && (
-                                            <div className="pt-2 flex flex-wrap gap-2">
-                                                {[payment.player1, payment.player2, payment.player3, payment.player4].map((p, i) => (
-                                                    <span key={i} className="text-[10px] bg-zinc-800 text-zinc-400 px-2 py-1 rounded-md border border-white/5 font-bold tracking-tight">
-                                                        P{i + 1}: {p || "N/A"}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        )}
-                                        
-                                        {payment.paymentType === 'store' && (
-                                            <div className="pt-2">
-                                                <span className="text-xs text-zinc-500 font-bold uppercase tracking-widest">
-                                                    Store Purchase: {payment.storeItem?.category || 'Item'}
+                                        <div className="pt-2 flex flex-wrap gap-2">
+                                            {[payment.player1, payment.player2, payment.player3, payment.player4].map((p, i) => (
+                                                <span key={i} className="text-[10px] bg-zinc-800 text-zinc-400 px-2 py-1 rounded-md border border-white/5 font-bold tracking-tight">
+                                                    P{i + 1}: {p || "N/A"}
                                                 </span>
-                                            </div>
-                                        )}
+                                            ))}
+                                        </div>
                                     </div>
 
                                     {payment.status === "pending" && (

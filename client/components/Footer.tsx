@@ -1,39 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Gamepad, Play, MessageCircle, MapPin, Download } from "lucide-react";
+import { Gamepad, Play, MessageCircle, MapPin, Download, ShoppingCart } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function Footer() {
-    const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-    const [isInstallable, setIsInstallable] = useState(false);
-
-    useEffect(() => {
-        const handleBeforeInstallPrompt = (e: any) => {
-            e.preventDefault();
-            setDeferredPrompt(e);
-            setIsInstallable(true);
-        };
-
-        window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
-        return () => {
-            window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-        };
-    }, []);
-
-    const handleInstallClick = async () => {
-        if (!deferredPrompt) return;
-
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        
-        if (outcome === "accepted") {
-            setDeferredPrompt(null);
-            setIsInstallable(false);
-        }
-    };
-
     return (
         <footer className="relative bg-white border-t border-gray-200 pt-20 pb-10 px-6 overflow-hidden">
             {/* Background Glow */}
@@ -64,16 +35,6 @@ export default function Footer() {
                                 icon={<Play className="h-5 w-5" />}
                                 colorClass="text-red-600"
                             />
-                            
-                            {isInstallable && (
-                                <button
-                                    onClick={handleInstallClick}
-                                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm"
-                                >
-                                    <Download className="h-4 w-4" />
-                                    Install App
-                                </button>
-                            )}
                         </div>
                     </div>
 
@@ -135,6 +96,31 @@ export default function Footer() {
                         className="relative z-10 px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-sm active:scale-95"
                     >
                         Message Admin on WhatsApp
+                    </Link>
+                </div>
+
+                {/* Buy UC & Account Alert Message */}
+                <div className="mb-12 p-6 rounded-3xl bg-emerald-50 border border-emerald-100 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-8 opacity-10">
+                       <ShoppingCart className="h-24 w-24 text-emerald-500" />
+                    </div>
+                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-4 text-center md:text-left transition-all group-hover:scale-[1.01]">
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center">
+                            <ShoppingCart className="h-6 w-6 text-emerald-600" />
+                        </div>
+                        <div>
+                            <h4 className="text-gray-900 font-black uppercase tracking-tight text-sm mb-1">Want to Buy UC & BGMI Accounts?</h4>
+                            <p className="text-gray-600 text-xs font-medium leading-relaxed max-w-md">
+                                Contact us directly on WhatsApp to purchase <span className="text-gray-900 font-bold">UC</span> and premium <span className="text-gray-900 font-bold">BGMI Accounts</span> at the best prices.
+                            </p>
+                        </div>
+                    </div>
+                    <Link 
+                        href="https://wa.me/916205597789"
+                        target="_blank"
+                        className="relative z-10 px-8 py-3.5 bg-gray-900 hover:bg-gray-800 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all shadow-sm active:scale-95"
+                    >
+                        Contact on WhatsApp
                     </Link>
                 </div>
 
