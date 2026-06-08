@@ -25,6 +25,7 @@ export const viewport: Viewport = {
 };
 
 import { Toaster } from "react-hot-toast";
+import BottomNav from "@/components/BottomNav";
 
 export default function RootLayout({
   children,
@@ -33,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-screen font-sans bg-gray-50 text-gray-900 antialiased">
+      <body className="min-h-screen font-sans bg-gray-50 text-gray-900 antialiased pb-16 md:pb-0">
         <Toaster position="top-right" toastOptions={{
           style: { background: '#ffffff', color: '#111827', border: '1px solid #e5e7eb' },
         }} />
@@ -41,6 +42,7 @@ export default function RootLayout({
           <SocketProvider>
             {children}
             <Footer />
+            <BottomNav />
           </SocketProvider>
         </AuthProvider>
       </body>

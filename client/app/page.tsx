@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Gamepad2, Trophy, Shield, Zap, ChevronRight, User as UserIcon, Play, Menu, X } from "lucide-react";
+import { Gamepad2, Trophy, Shield, Zap, ChevronRight, User as UserIcon, Play, Menu, X, BarChart2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { useSocket } from "@/context/SocketContext";
@@ -43,7 +43,8 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-gray-900 selection:bg-blue-500/30">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      {/* Desktop Top Nav */}
+      <nav className="hidden md:block fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="bg-blue-600 p-2 rounded-lg">
@@ -52,8 +53,7 @@ export default function LandingPage() {
             <span className="text-xl font-bold tracking-tighter uppercase italic text-gray-900">Frag Zone</span>
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-tight">
+          <div className="flex items-center gap-8 text-sm font-bold uppercase tracking-tight">
             <Link href="/results" className="text-gray-500 hover:text-gray-900 transition-colors">
               Results
             </Link>
@@ -86,59 +86,23 @@ export default function LandingPage() {
               </>
             )}
           </div>
-
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-gray-500 hover:text-gray-900 transition-colors"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
         </div>
-
-        {/* Mobile Nav Overlay */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white border-b border-gray-200 overflow-hidden shadow-sm"
-            >
-              <div className="flex flex-col p-6 gap-4 text-sm font-bold uppercase tracking-widest">
-                <Link href="/results" onClick={() => setIsMenuOpen(false)} className="text-gray-600 hover:text-gray-900 py-2 border-b border-gray-100">
-                  Results
-                </Link>
-                <Link href="/leaderboard" onClick={() => setIsMenuOpen(false)} className="text-gray-600 hover:text-gray-900 py-2 border-b border-gray-100">
-                  Leaderboard
-                </Link>
-                {user ? (
-                  <>
-                    <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="text-gray-600 hover:text-gray-900 py-2 border-b border-gray-100">
-                      Dashboard
-                    </Link>
-                    <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="text-blue-600 py-2 border-b border-gray-100">
-                      Profile
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/login" onClick={() => setIsMenuOpen(false)} className="text-gray-600 hover:text-gray-900 py-2 border-b border-gray-100">
-                      Log In
-                    </Link>
-                    <Link href="/register" onClick={() => setIsMenuOpen(false)} className="text-white bg-blue-600 px-4 py-3 rounded-xl text-center mt-2 shadow-sm">
-                      Join Now
-                    </Link>
-                  </>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </nav>
 
+      {/* Mobile Top Header (Brand Only) */}
+      <header className="md:hidden fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div className="px-6 h-16 flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="bg-blue-600 p-1.5 rounded-lg">
+              <Gamepad2 className="h-5 w-5 text-white" />
+            </div>
+            <span className="text-lg font-bold tracking-tighter uppercase italic text-gray-900">Frag Zone</span>
+          </Link>
+        </div>
+      </header>
+
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+      <section className="relative pt-16 md:pt-32 pb-32 md:pb-20 px-6 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-blue-50 blur-[120px] rounded-full" />
 
         <div className="max-w-5xl mx-auto text-center relative z-10">

@@ -107,8 +107,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 pb-12">
-      {/* Header */}
-      <nav className="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+      {/* Header (Name on top for all screens) */}
+      <nav className="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 left-0 w-full z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Gamepad2 className="h-6 w-6 text-blue-600" />
