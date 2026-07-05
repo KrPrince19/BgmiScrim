@@ -42,7 +42,9 @@ export default function LandingPage() {
         if (data.key === 'last_match_thumbnail_url') setYoutubeThumbnail(data.value);
       };
       socket.on('settingUpdate', handleUpdate);
-      return () => socket.off('settingUpdate', handleUpdate);
+      return () => {
+        socket.off('settingUpdate', handleUpdate);
+      };
     }
   }, [socket]);
 
