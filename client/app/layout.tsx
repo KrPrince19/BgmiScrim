@@ -26,6 +26,7 @@ export const viewport: Viewport = {
 
 import { Toaster } from "react-hot-toast";
 import BottomNav from "@/components/BottomNav";
+import InstallPrompt from "@/components/InstallPrompt";
 
 export default function RootLayout({
   children,
@@ -43,6 +44,7 @@ export default function RootLayout({
             {children}
             <Footer />
             <BottomNav />
+            <InstallPrompt />
           </SocketProvider>
         </AuthProvider>
       </body>
