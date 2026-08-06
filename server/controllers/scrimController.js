@@ -42,8 +42,8 @@ exports.getScrimById = async (req, res) => {
 // Create new scrim (admin)
 exports.createScrim = async (req, res) => {
   try {
-    const { matchName, time, entryFee, winningPrize, totalSlots, roomID, roomPassword } = req.body;
-    const scrim = await Scrim.create({ matchName, time, entryFee, winningPrize, totalSlots, roomID, roomPassword });
+    const { matchName, matchType, time, entryFee, winningPrize, totalSlots, roomID, roomPassword, image } = req.body;
+    const scrim = await Scrim.create({ matchName, matchType, time, entryFee, winningPrize, totalSlots, roomID, roomPassword, image });
 
     // Emit Real-time Update
     if (req.io) {
@@ -113,7 +113,7 @@ exports.finalizeScrim = async (req, res) => {
 // [ADMIN] Atomic publish to live leaderboard
 exports.publishResults = async (req, res) => {
   try {
-    const { scrimId, rankings, mvpPlayer, mvpTeam, mvpKills } = req.body;
+    const { scrimId, rankings, mvpPlayer, mvpTeam, mvpKills, mvpAvatar } = req.body;
 
     const scrim = await Scrim.findById(scrimId);
     if (!scrim) return res.status(404).json({ message: 'Scrim not found' });
@@ -125,7 +125,8 @@ exports.publishResults = async (req, res) => {
     scrim.mvpPlayer = mvpPlayer || "";
     scrim.mvpPlayerTeam = mvpTeam || "";
     scrim.mvpPlayerKills = mvpKills || 0;
-    scrim.matchResults = rankings.map(r => ({ teamName: r.teamName, kills: r.kills }));
+    scrim.mvpPlayerAvatar = mvpAvatar || "";
+    scrim.matchResults = rankings.map(r => ({ teamName: r.teamName, kills: r.killPoint || 0 }));
     await scrim.save();
 
     // RESET GLOBAL LEADERBOARD
@@ -133,14 +134,10 @@ exports.publishResults = async (req, res) => {
 
     // Bulk insert new leaderboard entries
     const leaderboardEntries = rankings.map(r => ({
-      teamName: r.teamName,
-      wins: r.rank === 1 ? 1 : 0,
-      secondPlace: r.rank === 2 ? 1 : 0,
-      thirdPlace: r.rank === 3 ? 1 : 0,
-      mvps: r.teamName === mvpTeam ? 1 : 0,
-      mvpPlayerName: r.teamName === mvpTeam ? (mvpPlayer || "") : "",
-      mvpPlayerTeam: r.teamName === mvpTeam ? (mvpTeam || "") : "",
-      totalKills: r.kills
+      playerName: r.playerName || "",
+      teamName: r.teamName || "",
+      killPoint: r.killPoint || 0,
+      rank: r.rank || 0
     }));
 
     await Leaderboard.insertMany(leaderboardEntries);
@@ -148,7 +145,7 @@ exports.publishResults = async (req, res) => {
     // Emit Real-time Updates
     if (req.io) {
       req.io.emit('scrimUpdate', scrim);
-      const updatedLeaderboard = await Leaderboard.find().sort({ points: -1, wins: -1 }).limit(50);
+      const updatedLeaderboard = await Leaderboard.find().sort({ rank: 1 }).limit(50);
       req.io.emit('leaderboardUpdate', updatedLeaderboard);
     }
 

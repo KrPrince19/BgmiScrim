@@ -10,8 +10,9 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSocket } from "@/context/SocketContext";
+import { UploadCloud } from "lucide-react";
 
-const emptyForm = { matchName: "", time: "", entryFee: "", winningPrize: "", totalSlots: "", roomID: "", roomPassword: "" };
+const emptyForm = { matchName: "", matchType: "Classic", time: "", entryFee: "", winningPrize: "", totalSlots: "", roomID: "", roomPassword: "", image: "" };
 
 export default function ScrimsPage() {
     const { user, loading: authLoading } = useAuth();
@@ -91,12 +92,14 @@ export default function ScrimsPage() {
         setEditingScrim(scrim);
         setForm({
             matchName: scrim.matchName,
+            matchType: scrim.matchType || "Classic",
             time: new Date(scrim.time).toISOString().slice(0, 16),
             entryFee: scrim.entryFee,
             winningPrize: scrim.winningPrize || "",
             totalSlots: scrim.totalSlots,
             roomID: scrim.roomID || "",
             roomPassword: scrim.roomPassword || "",
+            image: scrim.image || "",
         });
         setError("");
         setShowModal(true);
@@ -126,6 +129,27 @@ export default function ScrimsPage() {
         if (!confirm("Delete this scrim?")) return;
         await api.delete(`/scrims/${id}`);
         fetchScrims();
+    };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+            setSaving(true);
+            const res = await api.post("/upload", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+            setForm(prev => ({ ...prev, image: 'http://localhost:5000' + res.data.imageUrl })); // prepend baseurl for local
+        } catch (error) {
+            console.error("Image upload failed:", error);
+            setError("Failed to upload image");
+        } finally {
+            setSaving(false);
+        }
     };
 
     const handleSave = async (e: React.FormEvent) => {
@@ -277,22 +301,58 @@ export default function ScrimsPage() {
                                 <button onClick={() => setShowModal(false)}><X className="h-5 w-5 text-zinc-400 hover:text-white" /></button>
                             </div>
                             <form onSubmit={handleSave} className="space-y-4 text-white">
-                                {[
-                                    { key: "matchName", label: "Match Name", type: "text", placeholder: "e.g. Pro Scrim V1" },
-                                    { key: "time", label: "Match Date & Time", type: "datetime-local" },
-                                ].map(({ key, label, type, placeholder }) => (
-                                    <div key={key}>
-                                        <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">{label}</label>
-                                        <input
-                                            type={type}
-                                            placeholder={placeholder}
-                                            required
-                                            className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-red-500 transition-all font-bold"
-                                            value={(form as any)[key]}
-                                            onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-                                        />
+                                {error && (
+                                    <div className="bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-bold p-3 rounded-xl text-center">
+                                        {error}
                                     </div>
-                                ))}
+                                )}
+                                <div>
+                                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">Match Name</label>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. Pro Scrim V1"
+                                        required
+                                        className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-red-500 transition-all font-bold"
+                                        value={form.matchName}
+                                        onChange={(e) => setForm({ ...form, matchName: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">Match Type</label>
+                                    <select
+                                        className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-red-500 transition-all font-bold"
+                                        value={form.matchType}
+                                        onChange={(e) => setForm({ ...form, matchType: e.target.value })}
+                                    >
+                                        <option value="Classic">Classic</option>
+                                        <option value="TDM">TDM</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">Scrim Cover Image (Optional)</label>
+                                    <div className="flex items-center gap-4">
+                                        {form.image && (
+                                            <div className="w-16 h-16 rounded-xl overflow-hidden border border-white/10 shrink-0">
+                                                <img src={form.image} alt="Cover" className="w-full h-full object-cover" />
+                                            </div>
+                                        )}
+                                        <label className="flex-1 flex flex-col items-center justify-center p-4 border-2 border-dashed border-zinc-800 rounded-xl cursor-pointer hover:border-red-500 hover:bg-red-500/5 transition-all text-zinc-400 hover:text-white">
+                                            <UploadCloud className="h-5 w-5 mb-1" />
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-center">Click to Upload</span>
+                                            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-1 block">Match Date & Time</label>
+                                    <input
+                                        type="datetime-local"
+                                        required
+                                        className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-1 focus:ring-red-500 transition-all font-bold"
+                                        value={form.time}
+                                        onChange={(e) => setForm({ ...form, time: e.target.value })}
+                                    />
+                                </div>
 
                                 <div className="flex items-center gap-3 p-3 bg-red-600/10 border border-red-500/20 rounded-xl cursor-pointer" onClick={() => setForm({ ...form, entryFee: form.entryFee === "0" ? "" : "0" })}>
                                     <div className={`w-5 h-5 rounded flex items-center justify-center border ${form.entryFee === "0" ? 'bg-red-600 border-red-600' : 'bg-zinc-900 border-zinc-700'}`}>

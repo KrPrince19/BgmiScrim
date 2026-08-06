@@ -5,6 +5,15 @@ const scrimSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  matchType: {
+    type: String,
+    enum: ['Classic', 'TDM'],
+    default: 'Classic'
+  },
+  image: {
+    type: String,
+    default: ""
+  },
   time: {
     type: Date,
     required: true
@@ -64,6 +73,10 @@ const scrimSchema = new mongoose.Schema({
   mvpPlayerKills: {
     type: Number,
     default: 0
+  },
+  mvpPlayerAvatar: {
+    type: String,
+    default: ""
   },
   matchResults: [{
     teamName: String,

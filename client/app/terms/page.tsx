@@ -14,7 +14,7 @@ function TermsContent() {
         if (returnTo) {
             router.push(`/payment?id=${returnTo}`);
         } else {
-            router.push("/dashboard");
+            router.back();
         }
     };
 
@@ -24,10 +24,10 @@ function TermsContent() {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <button
-                        onClick={() => returnTo ? router.push(`/payment?id=${returnTo}`) : router.push("/")}
+                        onClick={() => returnTo ? router.push(`/payment?id=${returnTo}`) : router.back()}
                         className="inline-flex items-center gap-2 text-zinc-500 hover:text-white transition-colors font-bold"
                     >
-                        <ChevronLeft className="h-5 w-5" /> {returnTo ? "Back to Match" : "Back to Home"}
+                        <ChevronLeft className="h-5 w-5" /> {returnTo ? "Back to Match" : "Go Back"}
                     </button>
                     <div className="flex items-center gap-2 px-3 py-1 bg-red-600/10 text-red-500 rounded-full border border-red-500/20 text-[10px] font-black uppercase tracking-widest">
                         <ShieldAlert className="w-3 h-3" /> Strict Enforcement

@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/scrims", label: "Manage Scrims", icon: Trophy },
+    { href: "/tournaments", label: "Manage Tournaments", icon: Award },
     { href: "/leaderboard", label: "Leaderboard", icon: Award },
     { href: "/payments", label: "Payments", icon: CreditCard },
     { href: "/room", label: "Room Management", icon: DoorOpen },

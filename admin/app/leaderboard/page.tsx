@@ -5,7 +5,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import Sidebar from "@/components/Sidebar";
 import MobileHeader from "@/components/MobileHeader";
-import { Loader2, Trophy, User, Zap, Star, Check, Plus, Trash2, LayoutGrid, List } from "lucide-react";
+import { Loader2, Trophy, User, Zap, Star, Check, Plus, Trash2, LayoutGrid, List, UploadCloud } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSocket } from "@/context/SocketContext";
 import toast from "react-hot-toast";
@@ -15,8 +15,8 @@ export default function LeaderboardAdmin() {
     const [scrims, setScrims] = useState<any[]>([]);
     const [selectedScrim, setSelectedScrim] = useState<any>(null);
     const [participants, setParticipants] = useState<string[]>([]);
-    const [rankings, setRankings] = useState<{ teamName: string, rank: number, kills: number }[]>([]);
-    const [mvpForm, setMvpForm] = useState({ playerName: "", teamName: "", kills: 0 });
+    const [rankings, setRankings] = useState<{ playerName: string, teamName: string, rank: number, killPoint: number }[]>([]);
+    const [mvpForm, setMvpForm] = useState({ playerName: "", teamName: "", kills: 0, avatar: "" });
 
     const [liveLeaderboard, setLiveLeaderboard] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -55,7 +55,8 @@ export default function LeaderboardAdmin() {
             setMvpForm({
                 playerName: scrim.mvpPlayer || "",
                 teamName: scrim.mvpPlayerTeam || (data[0] || ""),
-                kills: scrim.mvpPlayerKills || 0
+                kills: scrim.mvpPlayerKills || 0,
+                avatar: scrim.mvpPlayerAvatar || ""
             });
         } catch (err) {
             toast.error("Failed to fetch participants");
@@ -66,12 +67,32 @@ export default function LeaderboardAdmin() {
 
     const addRankingRow = () => {
         const nextRank = rankings.length + 1;
-        setRankings([...rankings, { teamName: participants[0] || "", rank: nextRank, kills: 0 }]);
+        setRankings([...rankings, { playerName: "", teamName: participants[0] || "", rank: nextRank, killPoint: 0 }]);
     };
 
     const removeRankingRow = (index: number) => {
         const newRankings = rankings.filter((_, i) => i !== index).map((r, i) => ({ ...r, rank: i + 1 }));
         setRankings(newRankings);
+    };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const toastId = toast.loading("Uploading image...");
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+            const res = await api.post("/upload", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+            setMvpForm({ ...mvpForm, avatar: res.data.imageUrl });
+            toast.success("Image uploaded successfully!", { id: toastId });
+        } catch (error) {
+            console.error("Image upload failed:", error);
+            toast.error("Failed to upload image", { id: toastId });
+        }
     };
 
     const handlePublish = async () => {
@@ -83,7 +104,8 @@ export default function LeaderboardAdmin() {
                 rankings,
                 mvpPlayer: mvpForm.playerName,
                 mvpTeam: mvpForm.teamName,
-                mvpKills: mvpForm.kills
+                mvpKills: mvpForm.kills,
+                mvpAvatar: mvpForm.avatar
             });
             toast.success("Leaderboard updated and published live! ⚡");
             fetchInitialData();
@@ -156,7 +178,7 @@ export default function LeaderboardAdmin() {
                                                 <span className="text-[10px] font-black text-zinc-600 italic">#{i + 1}</span>
                                                 <span className="text-[10px] font-black uppercase tracking-tight">{team.teamName}</span>
                                             </div>
-                                            <span className="text-[10px] font-black text-amber-500">{team.points} PTS</span>
+                                            <span className="text-[10px] font-black text-amber-500">{team.killPoint} KP</span>
                                         </div>
                                     ))}
                                     {liveLeaderboard.length > 5 && <div className="text-[10px] text-zinc-600 font-bold text-center mt-2 italic">+ {liveLeaderboard.length - 5} more teams...</div>}
@@ -190,10 +212,25 @@ export default function LeaderboardAdmin() {
 
                                         <div className="space-y-3">
                                             {rankings.map((row, idx) => (
-                                                <div key={idx} className="grid grid-cols-12 gap-3 items-center p-3 bg-white/[0.02] border border-white/5 rounded-2xl">
-                                                    <div className="col-span-1 text-center font-black text-zinc-600 italic text-sm">#{row.rank}</div>
-                                                    <div className="col-span-7">
-                                                        <select
+                                                <div key={idx} className="flex gap-3 items-center p-3 bg-white/[0.02] border border-white/5 rounded-2xl">
+                                                    <div className="w-8 shrink-0 text-center font-black text-zinc-600 italic text-sm">#{row.rank}</div>
+                                                    <div className="flex-1">
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Player Name"
+                                                            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-2.5 text-xs font-bold text-white outline-none focus:border-red-600/50"
+                                                            value={row.playerName}
+                                                            onChange={(e) => {
+                                                                const nr = [...rankings];
+                                                                nr[idx].playerName = e.target.value;
+                                                                setRankings(nr);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Team Name"
                                                             className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-2.5 text-xs font-bold text-white outline-none focus:border-red-600/50"
                                                             value={row.teamName}
                                                             onChange={(e) => {
@@ -201,24 +238,26 @@ export default function LeaderboardAdmin() {
                                                                 nr[idx].teamName = e.target.value;
                                                                 setRankings(nr);
                                                             }}
-                                                        >
+                                                            list={`participants-list-${idx}`}
+                                                        />
+                                                        <datalist id={`participants-list-${idx}`}>
                                                             {participants.map(p => <option key={p} value={p}>{p}</option>)}
-                                                        </select>
+                                                        </datalist>
                                                     </div>
-                                                    <div className="col-span-3">
+                                                    <div className="w-24 shrink-0">
                                                         <input
                                                             type="number"
-                                                            placeholder="Kills"
+                                                            placeholder="Kill Pts"
                                                             className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-2.5 text-xs text-center font-black text-red-500 outline-none"
-                                                            value={row.kills}
+                                                            value={row.killPoint}
                                                             onChange={(e) => {
                                                                 const nr = [...rankings];
-                                                                nr[idx].kills = Number(e.target.value);
+                                                                nr[idx].killPoint = Number(e.target.value);
                                                                 setRankings(nr);
                                                             }}
                                                         />
                                                     </div>
-                                                    <div className="col-span-1 text-right">
+                                                    <div className="w-10 shrink-0 text-right">
                                                         <button onClick={() => removeRankingRow(idx)} className="p-2 hover:bg-red-600/10 text-zinc-700 hover:text-red-500 rounded-lg transition-all">
                                                             <Trash2 className="h-4 w-4" />
                                                         </button>
@@ -241,6 +280,25 @@ export default function LeaderboardAdmin() {
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="md:col-span-2">
+                                                <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-2 block">MVP Avatar</label>
+                                                <div className="flex items-center gap-4">
+                                                    {mvpForm.avatar ? (
+                                                        <div className="relative w-20 h-20 rounded-full border border-blue-500/50 overflow-hidden shrink-0">
+                                                            <img src={mvpForm.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                                                        </div>
+                                                    ) : (
+                                                        <div className="w-20 h-20 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
+                                                            <User className="h-8 w-8 text-zinc-700" />
+                                                        </div>
+                                                    )}
+                                                    <label className="flex-1 border-2 border-dashed border-zinc-800 hover:border-blue-500/50 hover:bg-blue-500/5 rounded-2xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all">
+                                                        <UploadCloud className="h-5 w-5 text-zinc-500" />
+                                                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center">Click to Upload Avatar</span>
+                                                        <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                                                    </label>
+                                                </div>
+                                            </div>
                                             <div>
                                                 <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-2 block">Player Name</label>
                                                 <div className="relative">
@@ -256,13 +314,17 @@ export default function LeaderboardAdmin() {
                                             </div>
                                             <div>
                                                 <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-2 block">Player Team</label>
-                                                <select
+                                                <input
+                                                    type="text"
+                                                    placeholder="Team / Player Name"
                                                     className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl py-3.5 px-6 text-sm font-bold text-white outline-none focus:border-blue-600/50"
                                                     value={mvpForm.teamName}
                                                     onChange={(e) => setMvpForm({ ...mvpForm, teamName: e.target.value })}
-                                                >
+                                                    list="mvp-team-list"
+                                                />
+                                                <datalist id="mvp-team-list">
                                                     {participants.map(p => <option key={p} value={p}>{p}</option>)}
-                                                </select>
+                                                </datalist>
                                             </div>
                                             <div className="md:col-span-2">
                                                 <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-2 block">MVP Kill Count</label>

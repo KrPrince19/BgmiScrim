@@ -6,6 +6,7 @@ require('dotenv').config();
 // Route Imports
 const authRoutes = require('./routes/auth');
 const scrimRoutes = require('./routes/scrims');
+const tournamentRoutes = require('./routes/tournaments');
 const paymentRoutes = require('./routes/payments');
 const leaderboardRoutes = require('./routes/leaderboard');
 const settingsRoutes = require('./routes/settings');
@@ -76,10 +77,12 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/scrims', scrimRoutes);
+app.use('/api/tournaments', tournamentRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/store', storeRoutes);
+app.use('/api/upload', require('./routes/upload'));
 
 // Custom Error Logger
 app.use((err, req, res, next) => {

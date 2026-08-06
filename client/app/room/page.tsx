@@ -25,7 +25,7 @@ function RoomContent() {
         }
       } catch (err) {
         console.error("Failed to fetch room details", err);
-        router.push("/dashboard");
+        router.push("/scrims");
       } finally {
         setLoading(false);
       }
@@ -47,8 +47,8 @@ function RoomContent() {
   return (
     <div className="min-h-screen bg-white text-gray-900">
       <nav className="p-6">
-        <Link href="/dashboard" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-bold text-sm">
-          <ChevronLeft className="h-5 w-5" /> Back to Dashboard
+        <Link href="/scrims" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-bold text-sm">
+          <ChevronLeft className="h-5 w-5" /> Back to Scrims
         </Link>
       </nav>
 
