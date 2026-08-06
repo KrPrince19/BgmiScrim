@@ -10,6 +10,7 @@ interface User {
   email: string;
   phone: string;
   role: string;
+  createdAt?: string | Date;
 }
 
 interface AuthContextType {
