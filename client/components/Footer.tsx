@@ -55,7 +55,6 @@ export default function Footer() {
               <FooterLink href="/scrims">Scrims</FooterLink>
               <FooterLink href="/tournaments">Tournaments</FooterLink>
               <FooterLink href="/leaderboard">Leaderboard</FooterLink>
-              <FooterLink href="/results">Results</FooterLink>
               <FooterLink href="/mvp">MVP Players</FooterLink>
               <FooterLink href="/about">About Us</FooterLink>
             </ul>

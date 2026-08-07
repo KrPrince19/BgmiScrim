@@ -11,6 +11,9 @@ export default function LandingPage() {
   const { user } = useAuth();
   const [recentMatches, setRecentMatches] = useState<any[]>([]);
   const [heroFrame, setHeroFrame] = useState(1);
+  const [stats, setStats] = useState({ activePlayers: 0, scrimsPlayed: 0, dailyScrims: 0, tournaments: 0, mvp: null as any });
+  const [upcomingScrims, setUpcomingScrims] = useState<any[]>([]);
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
 
   useEffect(() => {
     const totalFrames = 124;
@@ -96,7 +99,7 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
-    // Keep backend logic exactly same
+    // Keep backend logic exactly same for recent matches
     api.get("/scrims/all")
       .then(res => {
         const completed = res.data.filter((s: any) => s.status === 'completed');
@@ -104,40 +107,19 @@ export default function LandingPage() {
         setRecentMatches(completed.slice(0, 4));
       })
       .catch(err => console.log(err));
-  }, []);
 
-  const upcomingScrims = [
-    {
-      id: 1,
-      title: "Erangel Battle",
-      mode: "4v4 TPP",
-      time: "Today 07:00 PM",
-      prize: "500",
-      type: "CLASSIC",
-      image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800",
-      tagColor: "bg-purple-700"
-    },
-    {
-      id: 2,
-      title: "Miramar Mayhem",
-      mode: "4v4 TPP",
-      time: "Today 09:00 PM",
-      prize: "800",
-      type: "COMPETITIVE",
-      image: "https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?auto=format&fit=crop&q=80&w=800",
-      tagColor: "bg-orange-600"
-    },
-    {
-      id: 3,
-      title: "Sanhok Showdown",
-      mode: "4v4 TPP",
-      time: "Tomorrow 07:00 PM",
-      prize: "400",
-      type: "CLASSIC",
-      image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=800",
-      tagColor: "bg-purple-700"
-    }
-  ];
+    api.get("/stats")
+      .then(res => setStats(res.data))
+      .catch(err => console.log(err));
+
+    api.get("/scrims")
+      .then(res => setUpcomingScrims(res.data))
+      .catch(err => console.log(err));
+
+    api.get("/leaderboard")
+      .then(res => setLeaderboard(res.data.slice(0, 3)))
+      .catch(err => console.log(err));
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#030008] text-white font-sans overflow-hidden">
@@ -196,28 +178,28 @@ export default function LandingPage() {
           <div className="flex items-center justify-center gap-3 p-4 md:p-6 border-b md:border-b-0 border-white/5">
             <Users className="w-6 h-6 md:w-8 md:h-8 text-purple-600 shrink-0" />
             <div className="flex flex-col">
-              <span className="text-lg md:text-xl font-black text-white">5000+</span>
+              <span className="text-lg md:text-xl font-black text-white">{stats.activePlayers}+</span>
               <span className="text-[9px] md:text-[10px] text-gray-400 font-semibold uppercase tracking-wider whitespace-nowrap">Active Players</span>
             </div>
           </div>
           <div className="flex items-center justify-center gap-3 p-4 md:p-6 border-b md:border-b-0 border-white/5">
             <Crosshair className="w-6 h-6 md:w-8 md:h-8 text-purple-600 shrink-0" />
             <div className="flex flex-col">
-              <span className="text-lg md:text-xl font-black text-white">1200+</span>
+              <span className="text-lg md:text-xl font-black text-white">{stats.scrimsPlayed}+</span>
               <span className="text-[9px] md:text-[10px] text-gray-400 font-semibold uppercase tracking-wider whitespace-nowrap">Scrims Played</span>
             </div>
           </div>
           <div className="flex items-center justify-center gap-3 p-4 md:p-6">
             <Map className="w-6 h-6 md:w-8 md:h-8 text-purple-600 shrink-0" />
             <div className="flex flex-col">
-              <span className="text-lg md:text-xl font-black text-white">250+</span>
+              <span className="text-lg md:text-xl font-black text-white">{stats.dailyScrims}+</span>
               <span className="text-[9px] md:text-[10px] text-gray-400 font-semibold uppercase tracking-wider whitespace-nowrap">Daily Scrims</span>
             </div>
           </div>
           <div className="flex items-center justify-center gap-3 p-4 md:p-6">
             <Trophy className="w-6 h-6 md:w-8 md:h-8 text-purple-600 shrink-0" />
             <div className="flex flex-col">
-              <span className="text-lg md:text-xl font-black text-white">50+</span>
+              <span className="text-lg md:text-xl font-black text-white">{stats.tournaments}+</span>
               <span className="text-[9px] md:text-[10px] text-gray-400 font-semibold uppercase tracking-wider whitespace-nowrap">Tournaments</span>
             </div>
           </div>
@@ -233,34 +215,34 @@ export default function LandingPage() {
           </Link>
         </div>
         <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4 -mx-4 px-4 md:mx-0 md:px-0">
-          {upcomingScrims.map(scrim => (
-            <div key={scrim.id} className="min-w-[85vw] md:min-w-0 snap-center shrink-0 bg-[#0b0514] border border-white/5 rounded-2xl overflow-hidden group">
+          {upcomingScrims.map((scrim: any) => (
+            <div key={scrim._id} className="min-w-[85vw] md:min-w-0 snap-center shrink-0 bg-[#0b0514] border border-white/5 rounded-2xl overflow-hidden group">
               <div className="relative h-36 w-full">
-                <img src={scrim.image} alt={scrim.title} className="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-80 transition duration-500" />
+                <img src={scrim.image || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800'} alt={scrim.matchName} className="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-80 transition duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0b0514] via-[#0b0514]/80 to-transparent" />
                 <div className="absolute top-4 left-4">
-                  <span className={`px-2 py-1 text-[9px] font-black uppercase tracking-wider rounded text-white ${scrim.tagColor}`}>
-                    {scrim.type}
+                  <span className={`px-2 py-1 text-[9px] font-black uppercase tracking-wider rounded text-white ${scrim.entryFee > 0 ? 'bg-orange-600' : 'bg-purple-700'}`}>
+                    {scrim.entryFee > 0 ? 'PAID' : 'FREE'}
                   </span>
                 </div>
               </div>
               <div className="p-5 relative -mt-8 z-10 flex flex-col h-full">
                 <div className="flex justify-between items-start mb-1">
-                  <h3 className="text-lg md:text-xl font-black text-white">{scrim.title}</h3>
+                  <h3 className="text-lg md:text-xl font-black text-white">{scrim.matchName}</h3>
                   <div className="text-right">
-                    <span className="text-[10px] text-gray-400 block">{scrim.time.split(" ")[0]}</span>
-                    <span className="text-xs font-bold text-white">{scrim.time.split(" ").slice(1).join(" ")}</span>
+                    <span className="text-[10px] text-gray-400 block">{new Date(scrim.time).toLocaleDateString()}</span>
+                    <span className="text-xs font-bold text-white">{new Date(scrim.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
                 </div>
-                <div className="text-xs text-gray-400 font-semibold mb-6">{scrim.mode}</div>
+                <div className="text-xs text-gray-400 font-semibold mb-6">{scrim.matchType}</div>
                 <div className="mt-auto flex justify-between items-center pt-2">
                   <div>
                     <span className="text-[10px] text-gray-400 block mb-0.5 flex items-center gap-1"><Trophy className="w-3 h-3 text-purple-500" /> Prize Pool</span>
-                    <span className="text-lg font-black text-white">₹{scrim.prize}</span>
+                    <span className="text-lg font-black text-white">₹{scrim.winningPrize || 0}</span>
                   </div>
-                  <button className="px-6 py-2 bg-purple-700 hover:bg-purple-600 rounded-lg text-sm font-bold text-white transition shadow-[0_0_10px_rgba(126,34,206,0.2)]">
+                  <Link href={`/scrims/${scrim._id}`} className="px-6 py-2 bg-purple-700 hover:bg-purple-600 rounded-lg text-sm font-bold text-white transition shadow-[0_0_10px_rgba(126,34,206,0.2)]">
                     Join Now
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -295,42 +277,25 @@ export default function LandingPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-white/5 hover:bg-white/5 transition">
-                    <td className="py-5 px-2 font-black text-yellow-400 text-base">#1</td>
-                    <td className="py-5 px-2 flex items-center gap-3 font-bold text-white">
-                      <div className="w-8 h-8 bg-yellow-500/10 border border-yellow-500/20 rounded-lg flex items-center justify-center">
-                         <Shield className="w-4 h-4 text-yellow-500" />
-                      </div>
-                      Team INSANE
-                    </td>
-                    <td className="py-5 px-2 hidden md:table-cell text-center text-gray-300">48</td>
-                    <td className="py-5 px-2 hidden md:table-cell text-center text-gray-300">36</td>
-                    <td className="py-5 px-2 text-right font-black text-white">1200</td>
-                  </tr>
-                  <tr className="border-b border-white/5 hover:bg-white/5 transition">
-                    <td className="py-5 px-2 font-black text-gray-400 text-base">#2</td>
-                    <td className="py-5 px-2 flex items-center gap-3 font-bold text-white">
-                      <div className="w-8 h-8 bg-gray-500/10 border border-gray-500/20 rounded-lg flex items-center justify-center">
-                         <Shield className="w-4 h-4 text-gray-400" />
-                      </div>
-                      Soul Esports
-                    </td>
-                    <td className="py-5 px-2 hidden md:table-cell text-center text-gray-300">45</td>
-                    <td className="py-5 px-2 hidden md:table-cell text-center text-gray-300">30</td>
-                    <td className="py-5 px-2 text-right font-black text-white">1050</td>
-                  </tr>
-                  <tr className="hover:bg-white/5 transition">
-                    <td className="py-5 px-2 font-black text-orange-400 text-base">#3</td>
-                    <td className="py-5 px-2 flex items-center gap-3 font-bold text-white">
-                      <div className="w-8 h-8 bg-orange-500/10 border border-orange-500/20 rounded-lg flex items-center justify-center">
-                         <Shield className="w-4 h-4 text-orange-500" />
-                      </div>
-                      GodLike
-                    </td>
-                    <td className="py-5 px-2 hidden md:table-cell text-center text-gray-300">42</td>
-                    <td className="py-5 px-2 hidden md:table-cell text-center text-gray-300">28</td>
-                    <td className="py-5 px-2 text-right font-black text-white">980</td>
-                  </tr>
+                  {leaderboard.map((team: any, idx: number) => (
+                    <tr key={team._id || idx} className="border-b border-white/5 hover:bg-white/5 transition">
+                      <td className={`py-5 px-2 font-black text-base ${idx === 0 ? 'text-yellow-400' : idx === 1 ? 'text-gray-400' : 'text-orange-400'}`}>#{idx + 1}</td>
+                      <td className="py-5 px-2 flex items-center gap-3 font-bold text-white">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${idx === 0 ? 'bg-yellow-500/10 border-yellow-500/20' : idx === 1 ? 'bg-gray-500/10 border-gray-500/20' : 'bg-orange-500/10 border-orange-500/20'}`}>
+                           <Shield className={`w-4 h-4 ${idx === 0 ? 'text-yellow-500' : idx === 1 ? 'text-gray-400' : 'text-orange-500'}`} />
+                        </div>
+                        {team.teamName}
+                      </td>
+                      <td className="py-5 px-2 hidden md:table-cell text-center text-gray-300">--</td>
+                      <td className="py-5 px-2 hidden md:table-cell text-center text-gray-300">{team.wins || 0}</td>
+                      <td className="py-5 px-2 text-right font-black text-white">{team.points || team.killPoint || (team.wins * 10 + (team.totalKills || 0)) || 0}</td>
+                    </tr>
+                  ))}
+                  {leaderboard.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="py-8 text-center text-gray-500 text-sm">No leaderboard data available</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -346,32 +311,40 @@ export default function LandingPage() {
             <h2 className="text-sm font-black uppercase text-white tracking-wider flex items-center gap-2 mb-6">
               <Medal className="w-4 h-4 text-purple-600" /> MVP OF THE WEEK
             </h2>
-            <div className="flex items-center gap-4 mb-8">
-              <div className="relative">
-                <img src="https://i.pravatar.cc/150?img=11" alt="MVP Avatar" className="w-16 h-16 rounded-full border-2 border-purple-600 object-cover" />
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-purple-700 rounded-full flex items-center justify-center border-2 border-[#0b0514]">
-                   <Trophy className="w-3 h-3 text-white" />
+            {stats.mvp ? (
+              <>
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="relative">
+                    <img src={stats.mvp.avatar} alt="MVP Avatar" className="w-16 h-16 rounded-full border-2 border-purple-600 object-cover" />
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-purple-700 rounded-full flex items-center justify-center border-2 border-[#0b0514]">
+                       <Trophy className="w-3 h-3 text-white" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-white">{stats.mvp.playerName}</h3>
+                    <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">{stats.mvp.teamName}</p>
+                  </div>
                 </div>
+                <div className="grid grid-cols-3 gap-3 mt-auto">
+                  <div className="bg-white/5 rounded-xl p-3 text-center">
+                    <div className="text-[10px] text-gray-400 font-semibold mb-1 uppercase">Kills</div>
+                    <div className="text-xl font-black text-white">{stats.mvp.kills}</div>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-3 text-center">
+                    <div className="text-[10px] text-gray-400 font-semibold mb-1 uppercase">Matches</div>
+                    <div className="text-xl font-black text-white">{stats.mvp.matches}</div>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-3 text-center">
+                    <div className="text-[10px] text-gray-400 font-semibold mb-1 uppercase">K/D</div>
+                    <div className="text-xl font-black text-white">{stats.mvp.kd}</div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 flex items-center justify-center text-gray-500 text-sm">
+                No MVP data available yet
               </div>
-              <div>
-                <h3 className="text-lg font-black text-white">GodL Pikachu06</h3>
-                <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Assaulter</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-3 mt-auto">
-              <div className="bg-white/5 rounded-xl p-3 text-center">
-                <div className="text-[10px] text-gray-400 font-semibold mb-1 uppercase">Kills</div>
-                <div className="text-xl font-black text-white">75</div>
-              </div>
-              <div className="bg-white/5 rounded-xl p-3 text-center">
-                <div className="text-[10px] text-gray-400 font-semibold mb-1 uppercase">Matches</div>
-                <div className="text-xl font-black text-white">12</div>
-              </div>
-              <div className="bg-white/5 rounded-xl p-3 text-center">
-                <div className="text-[10px] text-gray-400 font-semibold mb-1 uppercase">K/D</div>
-                <div className="text-xl font-black text-white">6.25</div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

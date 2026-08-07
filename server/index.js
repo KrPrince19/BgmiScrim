@@ -11,6 +11,7 @@ const paymentRoutes = require('./routes/payments');
 const leaderboardRoutes = require('./routes/leaderboard');
 const settingsRoutes = require('./routes/settings');
 const storeRoutes = require('./routes/store');
+const statsRoutes = require('./routes/stats');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -83,6 +84,7 @@ app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/store', storeRoutes);
 app.use('/api/upload', require('./routes/upload'));
+app.use('/api/stats', statsRoutes);
 
 // Custom Error Logger
 app.use((err, req, res, next) => {
