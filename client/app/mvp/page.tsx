@@ -105,9 +105,7 @@ export default function MVPPage() {
                           <img src={currentMVP.mvpPlayerAvatar} alt={currentMVP.mvpPlayer} className="w-full h-full object-cover" />
                         </div>
                       ) : (
-                        <div className="w-24 h-24 bg-yellow-500/20 rounded-full flex items-center justify-center border-4 border-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.5)]">
-                          <Trophy className="w-12 h-12 text-yellow-500" />
-                        </div>
+                        <div className="w-24 h-24 rounded-full border-4 border-yellow-500/50 shadow-[0_0_20px_rgba(234,179,8,0.2)] bg-yellow-500/10" />
                       )}
                       <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-[#0b0514] rounded-full flex items-center justify-center p-1">
                         <div className="w-full h-full bg-yellow-500 rounded-full flex items-center justify-center">
@@ -164,9 +162,7 @@ export default function MVPPage() {
                             <img src={scrim.mvpPlayerAvatar} alt={scrim.mvpPlayer} className="w-full h-full object-cover" />
                           </div>
                         ) : (
-                          <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center border-2 border-white/10">
-                             <Trophy className="w-8 h-8 text-yellow-500" />
-                          </div>
+                          <div className="w-16 h-16 rounded-full border-2 border-white/10 bg-white/5" />
                         )}
                         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full whitespace-nowrap">
                           MVP

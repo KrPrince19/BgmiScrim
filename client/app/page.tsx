@@ -10,114 +10,31 @@ import Navbar from "@/components/Navbar";
 export default function LandingPage() {
   const { user } = useAuth();
   const [recentMatches, setRecentMatches] = useState<any[]>([]);
-  const [heroFrame, setHeroFrame] = useState(1);
   const [stats, setStats] = useState({ activePlayers: 0, scrimsPlayed: 0, dailyScrims: 0, tournaments: 0, mvp: null as any });
   const [upcomingScrims, setUpcomingScrims] = useState<any[]>([]);
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
 
   useEffect(() => {
-    const totalFrames = 124;
-    let isCancelled = false;
-    let currentFrame = 1;
-    let targetFrame = 124; // Will be updated by scroll immediately
-    let animationFrameId: number;
-    let currentPreload = 1;
-    const startTime = Date.now();
-    const introDurationMs = 2500; // Force intro to take at least 2.5 seconds
-
-    // Preload sequentially
-    const preloadNext = () => {
-      if (isCancelled || currentPreload > totalFrames) return;
-      const img = new Image();
-      img.onload = () => {
-        currentPreload++;
-        preloadNext();
-      };
-      img.onerror = () => {
-        currentPreload++;
-        preloadNext();
-      };
-      img.src = `/animation/ezgif-frame-${String(currentPreload).padStart(3, '0')}.jpg`;
-    };
-    preloadNext();
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY || 0;
-      const scrollRange = 600; 
-      const progress = Math.min(1, Math.max(0, scrollY / scrollRange));
-      let newTarget = 124 - Math.floor(progress * 123);
-      targetFrame = Math.max(1, Math.min(totalFrames, newTarget));
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Set initial targetFrame
-
-    const loop = () => {
-      if (isCancelled) return;
-      
-      const elapsed = Date.now() - startTime;
-      
-      // Calculate how many frames are allowed by time (e.g., 2.5 seconds to reach 124)
-      const timeAllowedFrame = Math.max(1, Math.min(totalFrames, Math.floor((elapsed / introDurationMs) * totalFrames)));
-      
-      // Calculate highest loaded frame
-      const highestLoaded = Math.max(1, currentPreload - 1);
-      
-      // Cap the desired frame by BOTH load speed and the 2.5s timer
-      const maxAllowedFrame = Math.min(highestLoaded, timeAllowedFrame);
-      
-      let desiredFrame = targetFrame;
-      if (desiredFrame > maxAllowedFrame) {
-        desiredFrame = maxAllowedFrame;
-      }
-
-      if (currentFrame !== desiredFrame) {
-        const diff = desiredFrame - currentFrame;
-        if (Math.abs(diff) <= 1) {
-          currentFrame = desiredFrame;
-        } else {
-          // Responsive step for scrolling, intro is bounded by maxAllowedFrame natively
-          let step = diff * 0.25; 
-          const maxSpeed = 5; // Fast responsive cap for scrolling
-          if (Math.abs(step) > maxSpeed) step = Math.sign(diff) * maxSpeed;
-          if (Math.abs(step) < 1) step = Math.sign(diff);
-          currentFrame += step;
-        }
-        setHeroFrame(Math.round(currentFrame));
-      }
-      
-      animationFrameId = requestAnimationFrame(loop);
-    };
-    
-    loop();
-
-    return () => {
-      isCancelled = true;
-      window.removeEventListener("scroll", handleScroll);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
-  useEffect(() => {
     // Keep backend logic exactly same for recent matches
     api.get("/scrims/all")
       .then(res => {
-        const completed = res.data.filter((s: any) => s.status === 'completed');
+        const data = Array.isArray(res.data) ? res.data : [];
+        const completed = data.filter((s: any) => s.status === 'completed');
         completed.sort((a: any, b: any) => new Date(b.time).getTime() - new Date(a.time).getTime());
         setRecentMatches(completed.slice(0, 4));
       })
       .catch(err => console.log(err));
 
     api.get("/stats")
-      .then(res => setStats(res.data))
+      .then(res => setStats(res.data || { activePlayers: 0, scrimsPlayed: 0, dailyScrims: 0, tournaments: 0, mvp: null }))
       .catch(err => console.log(err));
 
     api.get("/scrims")
-      .then(res => setUpcomingScrims(res.data))
+      .then(res => setUpcomingScrims(Array.isArray(res.data) ? res.data : []))
       .catch(err => console.log(err));
 
     api.get("/leaderboard")
-      .then(res => setLeaderboard(res.data.slice(0, 3)))
+      .then(res => setLeaderboard(Array.isArray(res.data) ? res.data.slice(0, 3) : []))
       .catch(err => console.log(err));
   }, []);
 
@@ -148,27 +65,18 @@ export default function LandingPage() {
               Explore Tournaments
             </Link>
           </div>
-          <div className="flex items-center gap-3 justify-center lg:justify-start">
-            <div className="flex -space-x-2">
-              {[1,2,3,4].map(i => (
-                <img key={i} src={`https://i.pravatar.cc/100?img=${i+10}`} alt="avatar" className="w-7 h-7 rounded-full border-2 border-[#030008]" />
-              ))}
-              <div className="w-7 h-7 rounded-full border-2 border-[#030008] bg-purple-950 flex items-center justify-center text-[8px] font-bold text-purple-200">+99</div>
+          {stats.activePlayers > 0 ? (
+            <div className="flex items-center gap-3 justify-center lg:justify-start">
+              <div className="flex -space-x-2">
+                <div className="w-7 h-7 rounded-full border-2 border-[#030008] bg-purple-950 flex items-center justify-center text-[8px] font-bold text-purple-200">+{stats.activePlayers}</div>
+              </div>
+              <span className="text-xs text-gray-400 font-semibold">Active Players</span>
             </div>
-            <span className="text-xs text-gray-400 font-semibold">Trusted by 5000+ Players</span>
-          </div>
+          ) : null}
         </div>
         
         <div className="flex-1 relative mt-16 lg:mt-0 flex justify-center lg:justify-end">
-           {/* Glowing Background / Hexagon */}
-           <div className="absolute inset-0 flex items-center justify-center pointer-events-none scale-110 lg:scale-150 transform translate-y-[-10%] lg:translate-x-[10%]">
-             <div className="w-[300px] h-[300px] md:w-[450px] md:h-[450px] bg-purple-800/20 blur-3xl rounded-full" />
-             <svg className="absolute w-[70%] h-[70%] opacity-40 text-purple-700" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-               <polygon points="50 5, 90 28, 90 72, 50 95, 10 72, 10 28" stroke="currentColor" strokeWidth="2.5" />
-               <polygon points="50 15, 80 32, 80 68, 50 85, 20 68, 20 32" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-             </svg>
-           </div>
-           <img src={`/animation/ezgif-frame-${String(heroFrame).padStart(3, '0')}.jpg`} alt="Hero Character" className="relative z-10 w-full max-w-[450px] lg:max-w-[550px] object-contain drop-shadow-[0_0_30px_rgba(126,34,206,0.3)] transform scale-125 lg:scale-110 mix-blend-lighten" />
+           <img src="/ezgif-frame-124.jpg" alt="Hero Character" className="relative z-10 w-full max-w-[450px] lg:max-w-[550px] object-contain drop-shadow-[0_0_30px_rgba(126,34,206,0.3)] hover:drop-shadow-[0_0_50px_rgba(126,34,206,0.6)] transform scale-125 lg:scale-110 hover:scale-[1.35] lg:hover:scale-[1.15] transition-all duration-500 mix-blend-lighten cursor-pointer" />
         </div>
       </section>
 
@@ -315,7 +223,11 @@ export default function LandingPage() {
               <>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="relative">
-                    <img src={stats.mvp.avatar} alt="MVP Avatar" className="w-16 h-16 rounded-full border-2 border-purple-600 object-cover" />
+                    {stats.mvp.avatar ? (
+                      <img src={stats.mvp.avatar} alt="MVP Avatar" className="w-16 h-16 rounded-full border-2 border-purple-600 object-cover" />
+                    ) : (
+                      <div className="w-16 h-16 rounded-full border-2 border-purple-600 bg-purple-900/20" />
+                    )}
                     <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-purple-700 rounded-full flex items-center justify-center border-2 border-[#0b0514]">
                        <Trophy className="w-3 h-3 text-white" />
                     </div>

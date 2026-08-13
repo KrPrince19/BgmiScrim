@@ -23,7 +23,7 @@ exports.getStats = async (req, res) => {
                 playerName: topScrim.mvpPlayer,
                 teamName: topScrim.mvpPlayerTeam,
                 kills: topScrim.mvpPlayerKills || 0,
-                avatar: topScrim.mvpPlayerAvatar || "https://i.pravatar.cc/150?img=11",
+                avatar: topScrim.mvpPlayerAvatar || "",
                 matches: 1, 
                 kd: topScrim.mvpPlayerKills || 0
             };
