@@ -28,7 +28,6 @@ import { Toaster } from "react-hot-toast";
 import BottomNav from "@/components/BottomNav";
 import InstallPrompt from "@/components/InstallPrompt";
 
-import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function RootLayout({
   children,
@@ -41,16 +40,14 @@ export default function RootLayout({
         <Toaster position="top-right" toastOptions={{
           style: { background: '#ffffff', color: '#111827', border: '1px solid #e5e7eb' },
         }} />
-        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}>
-          <AuthProvider>
-            <SocketProvider>
-              {children}
-              <Footer />
-              <BottomNav />
-              <InstallPrompt />
-            </SocketProvider>
-          </AuthProvider>
-        </GoogleOAuthProvider>
+        <AuthProvider>
+          <SocketProvider>
+            {children}
+            <Footer />
+            <BottomNav />
+            <InstallPrompt />
+          </SocketProvider>
+        </AuthProvider>
       </body>
     </html>
   );

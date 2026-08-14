@@ -7,7 +7,6 @@ import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { Mail, Lock, Loader2, Gamepad2, Eye, EyeOff, UserPlus, User, BarChart2, Gift, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
-import { GoogleLogin } from "@react-oauth/google";
 
 export default function RegisterPage() {
   const { login: setAuth } = useAuth();
@@ -60,19 +59,6 @@ export default function RegisterPage() {
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration failed");
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSuccess = async (credentialResponse: any) => {
-    try {
-      setLoading(true);
-      const { data } = await api.post("/auth/google", {
-        token: credentialResponse.credential,
-      });
-      setAuth(data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Google signup failed");
       setLoading(false);
     }
   };
@@ -287,25 +273,6 @@ export default function RegisterPage() {
                 </>
               )}
             </button>
-
-            <div className="flex items-center my-4">
-               <div className="flex-1 border-t border-white/10"></div>
-               <span className="px-3 text-[10px] text-gray-500 uppercase tracking-wider">or sign up with</span>
-               <div className="flex-1 border-t border-white/10"></div>
-            </div>
-
-            <div className="flex justify-center">
-               <div className="flex justify-center items-center overflow-hidden rounded-xl bg-[#150f22] border border-white/5 h-[42px] w-full max-w-xs">
-                  <GoogleLogin 
-                     onSuccess={handleGoogleSuccess} 
-                     onError={() => setError("Google signup failed")}
-                     useOneTap
-                     shape="rectangular"
-                     text="signup_with"
-                     theme="filled_black"
-                  />
-               </div>
-            </div>
 
             <p className="text-center text-xs text-gray-500 pt-1">
               Already have an account?{" "}

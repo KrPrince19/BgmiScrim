@@ -7,7 +7,6 @@ import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { Mail, Lock, Loader2, Gamepad2, Eye, EyeOff, Target, User } from "lucide-react";
 import { motion } from "framer-motion";
-import { GoogleLogin } from "@react-oauth/google";
 
 export default function LoginPage() {
   const { login: setAuth } = useAuth();
@@ -35,19 +34,6 @@ export default function LoginPage() {
         setError(err.response?.data?.message || "Login failed");
       }
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSuccess = async (credentialResponse: any) => {
-    try {
-      setLoading(true);
-      const { data } = await api.post("/auth/google", {
-        token: credentialResponse.credential,
-      });
-      setAuth(data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Google login failed");
       setLoading(false);
     }
   };
@@ -195,25 +181,6 @@ export default function LoginPage() {
                 </>
               )}
             </button>
-
-            <div className="flex items-center my-6">
-               <div className="flex-1 border-t border-white/10"></div>
-               <span className="px-3 text-xs text-gray-500">or continue with</span>
-               <div className="flex-1 border-t border-white/10"></div>
-            </div>
-
-            <div className="flex justify-center">
-               <div className="flex justify-center items-center overflow-hidden rounded-xl bg-[#150f22] border border-white/5 h-[42px] w-full max-w-xs">
-                  <GoogleLogin 
-                     onSuccess={handleGoogleSuccess} 
-                     onError={() => setError("Google login failed")}
-                     useOneTap
-                     shape="rectangular"
-                     text="signin_with"
-                     theme="filled_black"
-                  />
-               </div>
-            </div>
 
             <p className="text-center text-xs text-gray-500 pt-2">
               Don't have an account?{" "}
