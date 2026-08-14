@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "FragZone",
   },
   icons: {
-    apple: "/icon-192x192.png",
+    apple: "/mainlogo.jpeg",
   },
 };
 
