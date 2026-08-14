@@ -23,7 +23,7 @@ export default function Navbar() {
       {/* Desktop Navbar */}
       <nav className="hidden md:flex relative z-50 items-center justify-between px-8 py-3 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center group">
-          <img src="/fragzone.png" alt="FRAGZONE" className="h-16 lg:h-20 w-auto object-contain" />
+          <img src="/mainlogo.jpeg" alt="FRAGZONE" className="h-16 lg:h-20 w-auto object-contain" />
         </Link>
 
         <div className="flex items-center gap-8 text-sm font-semibold">
@@ -65,7 +65,7 @@ export default function Navbar() {
           </svg>
         </button>
         <Link href="/" className="flex items-center absolute left-1/2 -translate-x-1/2">
-          <img src="/fragzone.png" alt="FRAGZONE" className="h-10 w-auto object-contain" />
+          <img src="/mainlogo.jpeg" alt="FRAGZONE" className="h-10 w-auto object-contain" />
         </Link>
         <Link href={user ? "/profile" : "/login"} className="w-8 h-8 rounded-full border border-gray-600 flex items-center justify-center text-gray-300 relative">
           <UserIcon className="w-4 h-4" />

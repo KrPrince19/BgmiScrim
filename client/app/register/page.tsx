@@ -7,6 +7,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { Mail, Lock, Loader2, Gamepad2, Eye, EyeOff, UserPlus, User, BarChart2, Gift, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function RegisterPage() {
   const { login: setAuth } = useAuth();
@@ -63,6 +64,19 @@ export default function RegisterPage() {
     }
   };
 
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    try {
+      setLoading(true);
+      const { data } = await api.post("/auth/google", {
+        token: credentialResponse.credential,
+      });
+      setAuth(data);
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Google signup failed");
+      setLoading(false);
+    }
+  };
+
   const getPasswordStrength = () => {
     if (!formData.password) return 0;
     let strength = 0;
@@ -92,7 +106,7 @@ export default function RegisterPage() {
           <div className="relative z-10">
           <div className="mb-8">
             <Link href="/">
-               <img src="/fragzone.png" alt="FRAGZONE" className="h-12 w-auto object-contain" />
+               <img src="/mainlogo.jpeg" alt="FRAGZONE" className="h-12 w-auto object-contain" />
             </Link>
           </div>
           <h1 className="text-5xl font-black tracking-tighter mb-4 text-white leading-tight">
@@ -280,22 +294,17 @@ export default function RegisterPage() {
                <div className="flex-1 border-t border-white/10"></div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-               <button type="button" className="flex justify-center items-center gap-2 py-2.5 bg-[#150f22] border border-white/5 rounded-xl hover:bg-white/5 transition-colors text-sm text-gray-300 font-medium">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24">
-                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                  </svg>
-                  Google
-               </button>
-               <button type="button" className="flex justify-center items-center gap-2 py-2.5 bg-[#150f22] border border-white/5 rounded-xl hover:bg-white/5 transition-colors text-sm text-gray-300 font-medium">
-                  <svg className="w-5 h-5 text-[#5865F2]" fill="currentColor" viewBox="0 0 127.14 96.36">
-                     <path d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.08 0A72.37 72.37 0 0 0 45.67 0a105.14 105.14 0 0 0-26.23 8.07C2.04 33.84-2.4 58.98.92 83.74a105.73 105.73 0 0 0 32.27 16.17 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.28-16.17c3.78-29.28-2.61-54.08-19.53-75.67zM42.68 65.36c-5.36 0-9.82-4.93-9.82-11s4.38-11 9.82-11c5.49 0 9.89 4.97 9.82 11 0 6.07-4.33 11-9.82 11zm41.78 0c-5.36 0-9.82-4.93-9.82-11s4.38-11 9.82-11c5.49 0 9.89 4.97 9.82 11 0 6.07-4.33 11-9.82 11z"/>
-                  </svg>
-                  Discord
-               </button>
+            <div className="flex justify-center">
+               <div className="flex justify-center items-center overflow-hidden rounded-xl bg-[#150f22] border border-white/5 h-[42px] w-full max-w-xs">
+                  <GoogleLogin 
+                     onSuccess={handleGoogleSuccess} 
+                     onError={() => setError("Google signup failed")}
+                     useOneTap
+                     shape="rectangular"
+                     text="signup_with"
+                     theme="filled_black"
+                  />
+               </div>
             </div>
 
             <p className="text-center text-xs text-gray-500 pt-1">

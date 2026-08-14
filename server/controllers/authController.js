@@ -134,3 +134,60 @@ exports.directResetPassword = async (req, res) => {
   }
 };
 
+// Google Login
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+exports.googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    // Verify token with Google
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    
+    const payload = ticket.getPayload();
+    const { email, name } = payload;
+
+    // Check if user already exists
+    let user = await User.findOne({ email });
+
+    // Create user if doesn't exist
+    if (!user) {
+      // Auto-generate username and random password
+      const baseUsername = name.replace(/\s+/g, '').toLowerCase();
+      let uniqueUsername = baseUsername;
+      
+      // Ensure unique username
+      let usernameExists = await User.findOne({ username: uniqueUsername });
+      while (usernameExists) {
+        uniqueUsername = `${baseUsername}${Math.floor(Math.random() * 10000)}`;
+        usernameExists = await User.findOne({ username: uniqueUsername });
+      }
+
+      user = await User.create({
+        username: uniqueUsername,
+        email,
+        phone: "0000000000", // Dummy phone as it's required
+        password: Math.random().toString(36).slice(-10) + "A!1", // Satisfy regex
+        role: 'user'
+      });
+    }
+
+    // Return normal app auth token
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      token: generateToken(user._id)
+    });
+  } catch (error) {
+    console.error("Google login error:", error);
+    res.status(401).json({ message: 'Invalid Google Token' });
+  }
+};
+

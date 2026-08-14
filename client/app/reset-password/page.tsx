@@ -61,7 +61,7 @@ export default function ResetPasswordPage() {
           <div className="relative z-10">
           <div className="mb-8">
             <Link href="/">
-                <img src="/fragzone.png" alt="FRAGZONE" className="h-12 w-auto object-contain" />
+                <img src="/mainlogo.jpeg" alt="FRAGZONE" className="h-12 w-auto object-contain" />
             </Link>
           </div>
           <h1 className="text-5xl font-black tracking-tighter mb-4 text-white leading-tight">
