@@ -2,37 +2,5 @@
     at Server.setupListenHandle [as _listen2] (node:net:1940:16)
     at listenInCluster (node:net:1997:12)
     at Server.listen (node:net:2102:7)
-    at C:\Users\py242\OneDrive\Desktop\New folder (4)\bgmiscrim\server\index.js:133:12
+    at C:\Users\py242\OneDrive\Desktop\New folder (4)\bgmiscrim\server\index.js:135:12
     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-[UNCAUGHT EXCEPTION] Error: listen EADDRINUSE: address already in use :::5000
-    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
-    at listenInCluster (node:net:1997:12)
-    at Server.listen (node:net:2102:7)
-    at C:\Users\py242\OneDrive\Desktop\New folder (4)\BgmiScrim\server\index.js:134:12
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-[UNCAUGHT EXCEPTION] Error: listen EADDRINUSE: address already in use :::5000
-    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
-    at listenInCluster (node:net:1997:12)
-    at Server.listen (node:net:2102:7)
-    at C:\Users\py242\OneDrive\Desktop\New folder (4)\bgmiscrim\server\index.js:134:12
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-[UNCAUGHT EXCEPTION] Error: listen EADDRINUSE: address already in use :::5000
-    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
-    at listenInCluster (node:net:1997:12)
-    at Server.listen (node:net:2102:7)
-    at C:\Users\py242\OneDrive\Desktop\New folder (4)\bgmiscrim\server\index.js:134:12
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-[UNCAUGHT EXCEPTION] Error: listen EADDRINUSE: address already in use :::5000
-    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
-    at listenInCluster (node:net:1997:12)
-    at Server.listen (node:net:2102:7)
-    at C:\Users\py242\OneDrive\Desktop\New folder (4)\BgmiScrim\server\index.js:136:12
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-[UNCAUGHT EXCEPTION] Error: listen EADDRINUSE: address already in use :::5000
-    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
-    at listenInCluster (node:net:1997:12)
-    at Server.listen (node:net:2102:7)
-    at C:\Users\py242\OneDrive\Desktop\New folder (4)\bgmiscrim\server\index.js:136:12
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-[2026-08-05T03:50:50.262Z] 500 RETURNED for POST /publish-results | Body: {"message":"Leaderboard validation failed: teamName: Path `teamName` is required."}
-[2026-08-05T03:50:58.960Z] 500 RETURNED for POST /publish-results | Body: {"message":"Leaderboard validation failed: teamName: Path `teamName` is required."}

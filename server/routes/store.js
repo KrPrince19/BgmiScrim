@@ -24,7 +24,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Admin Middleware for Protecting Admin Routes
-const { protect, admin } = require('../middleware/authMiddleware');
 
 // ==========================================
 // PUBLIC ROUTES
@@ -53,7 +52,7 @@ router.get('/', async (req, res) => {
 // ==========================================
 
 // POST /api/store : Add a new store item
-router.post('/', protect, admin, upload.single('image'), async (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: "Image is required" });
@@ -91,7 +90,7 @@ router.post('/', protect, admin, upload.single('image'), async (req, res) => {
 });
 
 // PUT /api/store/:id : Update a store item
-router.put('/:id', protect, admin, upload.single('image'), async (req, res) => {
+router.put('/:id', upload.single('image'), async (req, res) => {
     try {
         const item = await StoreItem.findById(req.params.id);
         if (!item) return res.status(404).json({ message: "Item not found" });
@@ -138,7 +137,7 @@ router.put('/:id', protect, admin, upload.single('image'), async (req, res) => {
 });
 
 // PUT /api/store/:id/stock : Toggle Out Of Stock
-router.put('/:id/stock', protect, admin, async (req, res) => {
+router.put('/:id/stock', async (req, res) => {
     try {
         const item = await StoreItem.findById(req.params.id);
         if (!item) return res.status(404).json({ message: "Item not found" });
@@ -156,7 +155,7 @@ router.put('/:id/stock', protect, admin, async (req, res) => {
 });
 
 // PUT /api/store/:id/hide : Toggle visibility (hide/show)
-router.put('/:id/hide', protect, admin, async (req, res) => {
+router.put('/:id/hide', async (req, res) => {
     try {
         const item = await StoreItem.findById(req.params.id);
         if (!item) return res.status(404).json({ message: "Item not found" });
@@ -174,7 +173,7 @@ router.put('/:id/hide', protect, admin, async (req, res) => {
 });
 
 // DELETE /api/store/:id : Delete a store item
-router.delete('/:id', protect, admin, async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         const item = await StoreItem.findByIdAndDelete(req.params.id);
         if (!item) return res.status(404).json({ message: "Item not found" });

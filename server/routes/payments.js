@@ -5,7 +5,6 @@ const {
     getAllPayments, updatePaymentStatus, getDashboardStats,
     getScrimPlayers, removePlayer, getScrimParticipants
 } = require('../controllers/paymentController');
-const { protect, admin } = require('../middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -32,17 +31,17 @@ const upload = multer({
 });
 
 // Player routes
-router.post('/join', protect, upload.single('screenshot'), joinScrim);
-router.post('/buy-item', protect, upload.single('screenshot'), buyStoreItem);
-router.get('/my-payments', protect, getMyPayments);
-router.get('/status/:scrimId', protect, getPaymentStatus);
+router.post('/join', upload.single('screenshot'), joinScrim);
+router.post('/buy-item', upload.single('screenshot'), buyStoreItem);
+router.get('/my-payments', getMyPayments);
+router.get('/status/:scrimId', getPaymentStatus);
 
 // Admin routes
-router.get('/admin/stats', protect, admin, getDashboardStats);
-router.get('/admin/all', protect, admin, getAllPayments);
-router.patch('/admin/:id/status', protect, admin, updatePaymentStatus);
-router.get('/admin/scrim/:scrimId/players', protect, admin, getScrimPlayers);
-router.get('/admin/scrim/:scrimId/participants', protect, admin, getScrimParticipants);
-router.delete('/admin/:id/remove', protect, admin, removePlayer);
+router.get('/admin/stats', getDashboardStats);
+router.get('/admin/all', getAllPayments);
+router.patch('/admin/:id/status', updatePaymentStatus);
+router.get('/admin/scrim/:scrimId/players', getScrimPlayers);
+router.get('/admin/scrim/:scrimId/participants', getScrimParticipants);
+router.delete('/admin/:id/remove', removePlayer);
 
 module.exports = router;

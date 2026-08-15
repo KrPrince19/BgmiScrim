@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
-// Route Imports
-const authRoutes = require('./routes/auth');
 const scrimRoutes = require('./routes/scrims');
 const tournamentRoutes = require('./routes/tournaments');
 const paymentRoutes = require('./routes/payments');
@@ -76,7 +74,6 @@ app.use((req, res, next) => {
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
-app.use('/api/auth', authRoutes);
 app.use('/api/scrims', scrimRoutes);
 app.use('/api/tournaments', tournamentRoutes);
 app.use('/api/payments', paymentRoutes);

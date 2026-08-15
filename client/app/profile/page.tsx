@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
+import { useUser, useClerk } from "@clerk/nextjs";
 import { motion, AnimatePresence as FramerAnimatePresence } from "framer-motion";
 import { User as UserIcon, Mail, LogOut, ChevronLeft, Gamepad2, Loader2, Trophy, Clock, CheckCircle2, XCircle, AlertCircle, Search, Copy, QrCode, Edit2, Calendar, Users, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,10 @@ import { useSocket } from "@/context/SocketContext";
 import { toast } from "react-hot-toast";
 
 export default function ProfilePage() {
-  const { user, loading, logout } = useAuth();
+  const { user, isLoaded } = useUser();
+  const { signOut } = useClerk();
+  const loading = !isLoaded;
+  const logout = () => { signOut({ redirectUrl: '/' }) };
   const socket = useSocket();
   const [history, setHistory] = useState<any[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
@@ -21,15 +24,10 @@ export default function ProfilePage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login");
-      return;
-    }
-
     if (user) {
       fetchHistory();
     }
-  }, [user, loading, router]);
+  }, [user, loading]);
 
   const fetchHistory = async () => {
     try {
@@ -113,15 +111,19 @@ export default function ProfilePage() {
             <div className="flex items-center gap-6">
               <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#11131A] p-1 shadow-[0_0_30px_rgba(168,85,247,0.4)] border border-purple-500/50">
                  <div className="w-full h-full rounded-full bg-gradient-to-b from-purple-500/20 to-[#11131A] flex items-center justify-center overflow-hidden">
-                    <UserIcon className="w-10 h-10 md:w-14 md:h-14 text-purple-400" />
+                    {user?.imageUrl ? (
+                      <img src={user.imageUrl} alt="Profile" className="w-full h-full object-cover rounded-full" />
+                    ) : (
+                      <UserIcon className="w-10 h-10 md:w-14 md:h-14 text-purple-400" />
+                    )}
                  </div>
               </div>
               <div className="mb-2">
                 <h1 className="text-2xl md:text-4xl font-black text-white tracking-wide flex items-center gap-3">
-                  {user.username} 
+                  {user?.username || user?.fullName || user?.firstName || "Player"} 
                 </h1>
                 <p className="text-gray-400 flex items-center gap-2 text-sm mt-2 font-medium">
-                   <Calendar className="w-4 h-4 text-purple-400/70" /> Member since {new Date(user.createdAt || Date.now()).toLocaleString('en-US', { month: 'short', year: 'numeric' })}
+                   <Calendar className="w-4 h-4 text-purple-400/70" /> Member since {new Date(user?.createdAt || Date.now()).toLocaleString('en-US', { month: 'short', year: 'numeric' })}
                 </p>
               </div>
             </div>

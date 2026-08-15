@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+
 import { Home, Trophy, BarChart2, Gamepad2, User as UserIcon, LogIn } from "lucide-react";
 
 export default function BottomNav() {

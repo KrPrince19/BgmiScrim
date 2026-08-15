@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
 import api from "@/lib/api";
-import { useAuth } from "@/context/AuthContext";
+import { useUser } from "@clerk/nextjs";
+
 import {
   QrCode,
   Copy,
@@ -29,7 +30,8 @@ function PaymentContent() {
   const fee = searchParams.get("fee");
   const prize = searchParams.get("prize");
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, isLoaded } = useUser();
+  const authLoading = !isLoaded;
   const [scrim, setScrim] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -48,11 +50,7 @@ function PaymentContent() {
   const WHATSAPP_NUMBER = "916205597789";
 
   useEffect(() => {
-    if (authLoading) return;
-    if (!user) {
-      router.push("/login");
-      return;
-    }
+    if (authLoading || !user) return;
 
     if (title) {
       setScrim({
@@ -173,9 +171,9 @@ function PaymentContent() {
       <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-950/20 blur-[150px] rounded-full pointer-events-none" />
 
       <nav className="p-6 relative z-10">
-        <Link href="/scrims" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors font-bold text-sm">
-          <ChevronLeft className="h-5 w-5" /> Back to Scrims
-        </Link>
+        <button onClick={() => router.back()} className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors font-bold text-sm">
+          <ChevronLeft className="h-5 w-5" /> Go Back
+        </button>
       </nav>
 
       <main className="max-w-2xl mx-auto px-6 relative z-10">

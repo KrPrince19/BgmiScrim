@@ -3,7 +3,6 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { protect, admin } = require('../middleware/authMiddleware');
 
 // Ensure uploads directory exists
 const uploadDir = path.join(__dirname, '..', 'uploads');
@@ -39,7 +38,7 @@ const upload = multer({
   }
 });
 
-router.post('/', protect, admin, upload.single('image'), (req, res) => {
+router.post('/', upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No image uploaded' });
   }

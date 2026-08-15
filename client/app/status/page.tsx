@@ -57,9 +57,9 @@ function StatusContent() {
   return (
     <div className="min-h-screen bg-white text-gray-900">
        <nav className="p-6">
-        <Link href="/scrims" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-bold text-sm">
-          <ChevronLeft className="h-5 w-5" /> Back to Scrims
-        </Link>
+        <button onClick={() => router.back()} className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-bold text-sm">
+          <ChevronLeft className="h-5 w-5" /> Go Back
+        </button>
       </nav>
 
       <main className="max-w-xl mx-auto px-6 pt-12 text-center">

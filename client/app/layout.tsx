@@ -1,6 +1,6 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { AuthProvider } from "@/context/AuthContext";
 import { SocketProvider } from "@/context/SocketContext";
 import Footer from "@/components/Footer";
 
@@ -14,7 +14,8 @@ export const metadata: Metadata = {
     title: "FragZone",
   },
   icons: {
-    apple: "/icon-192x192.png",
+    apple: "/mainlogo.jpeg",
+    icon: "/mainlogo.jpeg",
   },
 };
 
@@ -37,17 +38,17 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="min-h-screen font-sans bg-gray-50 text-gray-900 antialiased pb-16 md:pb-0">
-        <Toaster position="top-right" toastOptions={{
+        <ClerkProvider>
+          <Toaster position="top-right" toastOptions={{
           style: { background: '#ffffff', color: '#111827', border: '1px solid #e5e7eb' },
-        }} />
-        <AuthProvider>
+          }} />
           <SocketProvider>
-            {children}
-            <Footer />
-            <BottomNav />
-            <InstallPrompt />
+          {children}
+          <Footer />
+          <BottomNav />
+          <InstallPrompt />
           </SocketProvider>
-        </AuthProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

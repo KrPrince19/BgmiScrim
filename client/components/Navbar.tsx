@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { User as UserIcon } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 
 import { useState } from "react";
 
 export default function Navbar() {
-  const { user } = useAuth();
+  const { isSignedIn } = useAuth();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -23,7 +23,18 @@ export default function Navbar() {
       {/* Desktop Navbar */}
       <nav className="hidden md:flex relative z-50 items-center justify-between px-8 py-3 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center group">
-          <img src="/mainlogo.jpeg" alt="FRAGZONE" className="h-16 lg:h-20 w-auto object-contain" />
+          <div className="relative">
+            <img src="/icon.png" alt="FRAGZONE" className="h-14 lg:h-16 w-auto object-contain" />
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex items-center gap-1 whitespace-nowrap">
+              <span className="w-4 h-px bg-purple-600"></span>
+              <p className="text-[7px] lg:text-[8px] font-black tracking-[0.2em] uppercase">
+                <span className="text-white">PLAY. </span>
+                <span className="text-purple-500">COMPETE. </span>
+                <span className="text-white">CONQUER.</span>
+              </p>
+              <span className="w-4 h-px bg-purple-600"></span>
+            </div>
+          </div>
         </Link>
 
         <div className="flex items-center gap-8 text-sm font-semibold">
@@ -36,19 +47,25 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          {!user ? (
+          {!isSignedIn ? (
             <>
-              <Link href="/login" className="px-6 py-2 rounded-lg border border-gray-700 text-white hover:bg-white/5 transition-colors text-sm font-bold">
-                Login
-              </Link>
-              <Link href="/register" className="px-6 py-2 rounded-lg bg-purple-700 text-white hover:bg-purple-600 transition-colors text-sm font-bold shadow-[0_0_15px_rgba(126,34,206,0.4)]">
-                Sign Up
-              </Link>
+              <SignInButton mode="modal">
+                <button className="px-6 py-2 rounded-lg border border-gray-700 text-white hover:bg-white/5 transition-colors text-sm font-bold">
+                  Login
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className="px-6 py-2 rounded-lg bg-purple-700 text-white hover:bg-purple-600 transition-colors text-sm font-bold shadow-[0_0_15px_rgba(126,34,206,0.4)]">
+                  Sign Up
+                </button>
+              </SignUpButton>
             </>
           ) : (
-            <Link href="/profile" className="px-6 py-2 rounded-lg bg-purple-700 text-white hover:bg-purple-600 transition-all shadow-[0_0_15px_rgba(126,34,206,0.4)] flex items-center gap-2 text-sm font-bold">
-              <UserIcon className="h-4 w-4" /> Profile
-            </Link>
+            <>
+              <Link href="/profile" className="px-4 py-2 rounded-lg text-gray-300 hover:text-white transition-all flex items-center gap-2 text-sm font-bold">
+                <UserIcon className="h-4 w-4" /> Profile
+              </Link>
+            </>
           )}
         </div>
       </nav>
@@ -65,11 +82,31 @@ export default function Navbar() {
           </svg>
         </button>
         <Link href="/" className="flex items-center absolute left-1/2 -translate-x-1/2">
-          <img src="/mainlogo.jpeg" alt="FRAGZONE" className="h-10 w-auto object-contain" />
+          <div className="relative">
+            <img src="/icon.png" alt="FRAGZONE" className="h-9 w-auto object-contain" />
+            <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 flex items-center gap-0.5 whitespace-nowrap">
+              <span className="w-2 h-px bg-purple-600"></span>
+              <p className="text-[5px] font-black tracking-[0.18em] uppercase">
+                <span className="text-white">PLAY. </span>
+                <span className="text-purple-500">COMPETE. </span>
+                <span className="text-white">CONQUER.</span>
+              </p>
+              <span className="w-2 h-px bg-purple-600"></span>
+            </div>
+          </div>
         </Link>
-        <Link href={user ? "/profile" : "/login"} className="w-8 h-8 rounded-full border border-gray-600 flex items-center justify-center text-gray-300 relative">
-          <UserIcon className="w-4 h-4" />
-        </Link>
+        
+        {!isSignedIn ? (
+          <SignInButton mode="modal">
+            <button className="w-8 h-8 rounded-full border border-gray-600 flex items-center justify-center text-gray-300 relative">
+              <UserIcon className="w-4 h-4" />
+            </button>
+          </SignInButton>
+        ) : (
+          <Link href="/profile" className="w-8 h-8 rounded-full border border-gray-600 flex items-center justify-center text-gray-300 relative bg-purple-900/30 hover:bg-purple-800/40 transition">
+             <UserIcon className="w-4 h-4 text-purple-400" />
+          </Link>
+        )}
       </header>
 
       {/* Mobile Menu Backdrop */}

@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { User as UserIcon, Trophy, Users, Crosshair, Map, Medal, ChevronRight, Shield } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+
 import api from "@/lib/api";
 import Navbar from "@/components/Navbar";
 
 export default function LandingPage() {
-  const { user } = useAuth();
+
   const [recentMatches, setRecentMatches] = useState<any[]>([]);
   const [stats, setStats] = useState({ activePlayers: 0, scrimsPlayed: 0, dailyScrims: 0, tournaments: 0, mvp: null as any });
   const [upcomingScrims, setUpcomingScrims] = useState<any[]>([]);
@@ -148,7 +148,7 @@ export default function LandingPage() {
                     <span className="text-[10px] text-gray-400 block mb-0.5 flex items-center gap-1"><Trophy className="w-3 h-3 text-purple-500" /> Prize Pool</span>
                     <span className="text-lg font-black text-white">₹{scrim.winningPrize || 0}</span>
                   </div>
-                  <Link href={`/scrims/${scrim._id}`} className="px-6 py-2 bg-purple-700 hover:bg-purple-600 rounded-lg text-sm font-bold text-white transition shadow-[0_0_10px_rgba(126,34,206,0.2)]">
+                  <Link href={`/payment?id=${scrim._id}&type=scrim&title=${encodeURIComponent(scrim.matchName)}&fee=${scrim.entryFee || 0}&prize=${scrim.winningPrize || 0}`} className="px-6 py-2 bg-purple-700 hover:bg-purple-600 rounded-lg text-sm font-bold text-white transition shadow-[0_0_10px_rgba(126,34,206,0.2)]">
                     Join Now
                   </Link>
                 </div>
