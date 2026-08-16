@@ -21,8 +21,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const auth = sessionStorage.getItem("admin_auth");
         if (auth === "true") {
             setIsAdmin(true);
-        } else if (pathname !== "/login") {
-            router.push("/login");
+        } else if (pathname !== "/") {
+            router.push("/");
         }
         setLoading(false);
     }, [pathname, router]);
@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const logout = () => {
         sessionStorage.removeItem("admin_auth");
         setIsAdmin(false);
-        router.push("/login");
+        router.push("/");
     };
 
     return (
