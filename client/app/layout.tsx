@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { SocketProvider } from "@/context/SocketContext";
 import Footer from "@/components/Footer";
+import ClerkTokenSync from "@/components/ClerkTokenSync";
 
 export const metadata: Metadata = {
   title: "FragZone | Premium BGMI Scrims",
@@ -39,6 +40,7 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body className="min-h-screen font-sans bg-gray-50 text-gray-900 antialiased pb-16 md:pb-0">
         <ClerkProvider>
+          <ClerkTokenSync />
           <Toaster position="top-right" toastOptions={{
           style: { background: '#ffffff', color: '#111827', border: '1px solid #e5e7eb' },
           }} />

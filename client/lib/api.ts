@@ -10,28 +10,19 @@ const api = axios.create({
 });
 
 /**
- * Request interceptor — attaches the Clerk session token as a Bearer token.
+ * setApiToken — Call this from a component that has access to Clerk's useAuth hook.
+ * Attaches (or clears) the Clerk session token on every outgoing request.
  *
- * Clerk exposes the session token via window.__clerk_db_jwt (set by ClerkProvider)
- * or via the Clerk object on window. We read it here so every API call is
- * automatically authenticated without needing to wrap every component.
- *
- * NOTE: This works because ClerkProvider is mounted in layout.tsx above the app.
+ * Usage in a client component:
+ *   const { getToken } = useAuth();
+ *   useEffect(() => { getToken().then(setApiToken); }, [getToken]);
  */
-api.interceptors.request.use(async (config) => {
-  try {
-    // window.Clerk is the global Clerk instance injected by <ClerkProvider>
-    const clerkInstance = (window as any).Clerk;
-    if (clerkInstance?.session) {
-      const token = await clerkInstance.session.getToken();
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    }
-  } catch {
-    // Not in a browser environment (e.g. SSR) — skip silently
+export function setApiToken(token: string | null) {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common['Authorization'];
   }
-  return config;
-});
+}
 
 export default api;
