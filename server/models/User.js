@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
+  clerkId: {
+    type: String,
+    unique: true,
+    sparse: true, // allows existing docs without clerkId
+  },
   username: {
     type: String,
     required: true,
@@ -13,7 +18,7 @@ const userSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: true
+    default: '0000000000'
   },
   role: {
     type: String,

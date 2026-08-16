@@ -5,6 +5,7 @@ const {
     getAllPayments, updatePaymentStatus, getDashboardStats,
     getScrimPlayers, removePlayer, getScrimParticipants
 } = require('../controllers/paymentController');
+const { protect } = require('../middleware/auth');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -30,11 +31,11 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
 });
 
-// Player routes
-router.post('/join', upload.single('screenshot'), joinScrim);
-router.post('/buy-item', upload.single('screenshot'), buyStoreItem);
-router.get('/my-payments', getMyPayments);
-router.get('/status/:scrimId', getPaymentStatus);
+// Player routes — all require a valid Clerk session token
+router.post('/join', protect, upload.single('screenshot'), joinScrim);
+router.post('/buy-item', protect, upload.single('screenshot'), buyStoreItem);
+router.get('/my-payments', protect, getMyPayments);
+router.get('/status/:scrimId', protect, getPaymentStatus);
 
 // Admin routes
 router.get('/admin/stats', getDashboardStats);
