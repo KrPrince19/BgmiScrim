@@ -32,7 +32,7 @@ export default function RoomPage() {
             })
             .catch(console.error)
             .finally(() => setLoading(false));
-    }, [user, authLoading]);
+    }, [isAdmin, authLoading]);
 
     const handleSave = async (scrimId: string) => {
         setSaving(scrimId);
@@ -47,7 +47,7 @@ export default function RoomPage() {
         }
     };
 
-    if (authLoading || !user || loading) {
+    if (authLoading || !isAdmin || loading) {
         return <div className="min-h-screen bg-black flex items-center justify-center"><Loader2 className="h-10 w-10 text-red-500 animate-spin" /></div>;
     }
 

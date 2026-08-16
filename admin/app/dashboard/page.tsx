@@ -29,10 +29,10 @@ export default function AdminDashboard() {
                 }
             })
             .finally(() => setLoading(false));
-    }, [user, authLoading]);
+    }, [isAdmin, authLoading]);
 
 
-    if (authLoading || !user || loading) {
+    if (authLoading || !isAdmin || loading) {
         return (
             <div className="min-h-screen bg-black flex items-center justify-center">
                 <Loader2 className="h-10 w-10 text-red-500 animate-spin" />
@@ -55,7 +55,7 @@ export default function AdminDashboard() {
                 <div className="max-w-5xl mx-auto">
                     <div className="mb-10">
                         <h1 className="text-4xl font-black tracking-tight mb-1">
-                            Welcome, <span className="text-red-500">{user.username}</span>
+                            Welcome, <span className="text-red-500">Admin</span>
                         </h1>
                         <p className="text-zinc-500">Here's what's happening on your platform today.</p>
                     </div>

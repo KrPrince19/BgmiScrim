@@ -40,7 +40,7 @@ export default function PaymentsPage() {
         if (authLoading || !isAdmin) return;
         setLoading(true);
         fetchPayments();
-    }, [user, authLoading, filter]);
+    }, [isAdmin, authLoading, filter]);
 
     useEffect(() => {
         if (!socket) return;

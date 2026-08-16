@@ -60,7 +60,7 @@ export default function tournamentsPage() {
     useEffect(() => {
         if (authLoading || !isAdmin) return;
         fetchtournaments();
-    }, [user, authLoading]);
+    }, [isAdmin, authLoading]);
 
     useEffect(() => {
         if (!socket) return;
@@ -179,7 +179,7 @@ export default function tournamentsPage() {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     
-    if (authLoading || !user || loading) {
+    if (authLoading || !isAdmin || loading) {
         return (
             <div className="min-h-screen bg-black flex items-center justify-center">
                 <Loader2 className="h-10 w-10 text-red-500 animate-spin" />

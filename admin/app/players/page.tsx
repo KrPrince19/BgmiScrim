@@ -24,7 +24,7 @@ export default function PlayersPage() {
             .then(({ data }) => setScrims(Array.isArray(data) ? data : []))
             .catch(console.error)
             .finally(() => setLoadingScrims(false));
-    }, [user, authLoading]);
+    }, [isAdmin, authLoading]);
 
     const fetchPlayers = async (scrim: any) => {
         setSelectedScrim(scrim);
@@ -52,7 +52,7 @@ export default function PlayersPage() {
         }
     };
 
-    if (authLoading || !user || loadingScrims) {
+    if (authLoading || !isAdmin || loadingScrims) {
         return <div className="min-h-screen bg-black flex items-center justify-center"><Loader2 className="h-10 w-10 text-red-500 animate-spin" /></div>;
     }
 
