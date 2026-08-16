@@ -15,7 +15,7 @@ import { UploadCloud } from "lucide-react";
 const emptyForm = { matchName: "", matchType: "Classic", time: "", entryFee: "", winningPrize: "", totalSlots: "", roomID: "", roomPassword: "", image: "" };
 
 export default function tournamentsPage() {
-    const { user, loading: authLoading } = useAuth();
+    const { isAdmin, loading: authLoading } = useAuth();
     const [activeTab, setActiveTab] = useState<'upcoming' | 'completed'>('upcoming');
     const [tournaments, settournaments] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -58,7 +58,7 @@ export default function tournamentsPage() {
     );
 
     useEffect(() => {
-        if (authLoading || !user) return;
+        if (authLoading || !isAdmin) return;
         fetchtournaments();
     }, [user, authLoading]);
 

@@ -18,7 +18,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function PaymentsPage() {
-    const { user, loading: authLoading } = useAuth();
+    const { isAdmin, loading: authLoading } = useAuth();
     const [payments, setPayments] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState("all");
@@ -37,7 +37,7 @@ export default function PaymentsPage() {
     };
 
     useEffect(() => {
-        if (authLoading || !user) return;
+        if (authLoading || !isAdmin) return;
         setLoading(true);
         fetchPayments();
     }, [user, authLoading, filter]);
@@ -64,7 +64,7 @@ export default function PaymentsPage() {
         finally { setUpdating(null); }
     };
 
-    if (authLoading || !user) {
+    if (authLoading || !isAdmin) {
         return <div className="min-h-screen bg-black flex items-center justify-center"><Loader2 className="h-10 w-10 text-red-500 animate-spin" /></div>;
     }
 

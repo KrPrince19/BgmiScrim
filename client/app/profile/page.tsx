@@ -131,7 +131,6 @@ export default function ProfilePage() {
             <button 
               onClick={() => {
                 logout();
-                router.push("/login");
               }}
               className="flex items-center justify-center gap-2 bg-red-500/10 border border-red-500/30 hover:border-red-500 hover:bg-red-500 text-red-400 hover:text-white px-6 py-2.5 rounded-xl font-bold transition-all mb-2 shadow-[0_0_15px_rgba(239,68,68,0)] hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] backdrop-blur-md"
             >

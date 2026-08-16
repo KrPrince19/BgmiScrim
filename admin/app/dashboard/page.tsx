@@ -10,7 +10,7 @@ import { Loader2, Users, Trophy, CreditCard, CheckCircle2, Clock, Globe, AlertCi
 import { motion } from "framer-motion";
 
 export default function AdminDashboard() {
-    const { user, loading: authLoading } = useAuth();
+    const { isAdmin, loading: authLoading } = useAuth();
     const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [sessionError, setSessionError] = useState(false);
@@ -18,7 +18,7 @@ export default function AdminDashboard() {
     const socket = useSocket();
 
     useEffect(() => {
-        if (authLoading || !user) return;
+        if (authLoading || !isAdmin) return;
         setSessionError(false);
         api.get("/payments/admin/stats")
             .then(({ data }) => setStats(data))

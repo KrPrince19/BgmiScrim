@@ -25,7 +25,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname();
-    const { user, logout } = useAuth();
+    const { isAdmin, logout } = useAuth();
 
     return (
         <>
@@ -87,7 +87,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <div className="p-4 border-t border-white/5">
                     <div className="flex items-center justify-between p-3 bg-zinc-900/50 rounded-xl border border-white/5">
                         <div className="min-w-0">
-                            <div className="text-xs font-black truncate text-white">{user?.username}</div>
+                            <div className="text-xs font-black truncate text-white">Admin</div>
                             <div className="text-[9px] text-red-500 uppercase tracking-widest font-bold">Administrator</div>
                         </div>
                         <button onClick={logout} className="p-2 rounded-lg hover:bg-red-600/10 hover:text-red-500 transition-colors" title="Logout">

@@ -11,7 +11,7 @@ import { useSocket } from "@/context/SocketContext";
 import toast from "react-hot-toast";
 
 export default function LeaderboardAdmin() {
-    const { user, loading: authLoading } = useAuth();
+    const { isAdmin, loading: authLoading } = useAuth();
     const [scrims, setScrims] = useState<any[]>([]);
     const [selectedScrim, setSelectedScrim] = useState<any>(null);
     const [participants, setParticipants] = useState<string[]>([]);
@@ -40,7 +40,7 @@ export default function LeaderboardAdmin() {
     };
 
     useEffect(() => {
-        if (authLoading || !user) return;
+        if (authLoading || !isAdmin) return;
         fetchInitialData();
     }, [user, authLoading]);
 

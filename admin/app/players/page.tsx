@@ -9,7 +9,7 @@ import { Loader2, Trophy, Users, Trash2, Phone, Mail, UserCheck } from "lucide-r
 import { motion } from "framer-motion";
 
 export default function PlayersPage() {
-    const { user, loading: authLoading } = useAuth();
+    const { isAdmin, loading: authLoading } = useAuth();
     const [scrims, setScrims] = useState<any[]>([]);
     const [selectedScrim, setSelectedScrim] = useState<any>(null);
     const [players, setPlayers] = useState<any[]>([]);
@@ -19,7 +19,7 @@ export default function PlayersPage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
-        if (authLoading || !user) return;
+        if (authLoading || !isAdmin) return;
         api.get("/scrims/all")
             .then(({ data }) => setScrims(Array.isArray(data) ? data : []))
             .catch(console.error)

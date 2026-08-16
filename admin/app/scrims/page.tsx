@@ -15,7 +15,7 @@ import { UploadCloud } from "lucide-react";
 const emptyForm = { matchName: "", matchType: "Classic", time: "", entryFee: "", winningPrize: "", totalSlots: "", roomID: "", roomPassword: "", image: "" };
 
 export default function ScrimsPage() {
-    const { user, loading: authLoading } = useAuth();
+    const { isAdmin, loading: authLoading } = useAuth();
     const [activeTab, setActiveTab] = useState<'upcoming' | 'completed'>('upcoming');
     const [scrims, setScrims] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -58,7 +58,7 @@ export default function ScrimsPage() {
     );
 
     useEffect(() => {
-        if (authLoading || !user) return;
+        if (authLoading || !isAdmin) return;
         fetchScrims();
     }, [user, authLoading]);
 

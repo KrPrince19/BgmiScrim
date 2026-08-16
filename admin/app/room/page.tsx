@@ -9,7 +9,7 @@ import { Loader2, Trophy, Clock, KeySquare, Save, CheckCircle2 } from "lucide-re
 import { motion } from "framer-motion";
 
 export default function RoomPage() {
-    const { user, loading: authLoading } = useAuth();
+    const { isAdmin, loading: authLoading } = useAuth();
     const [scrims, setScrims] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState<string | null>(null);
@@ -18,7 +18,7 @@ export default function RoomPage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
-        if (authLoading || !user) return;
+        if (authLoading || !isAdmin) return;
         api.get("/scrims/all")
             .then(({ data }) => {
                 const arr = Array.isArray(data) ? data : [];
